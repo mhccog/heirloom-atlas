@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Heirloom Atlas · people who should know each other</title>
+<meta name="description" content="Cyrus's walk-in networking atlas: 45 heirloom-trade businesses across 7 towns, who to meet, what they need, and who they could meet.">
+<meta name="theme-color" content="#f6f0e1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:title" content="The Heirloom Atlas">
+<meta property="og:description" content="I connect people who don't know they need each other. 45 heirloom-trade businesses, 7 towns, the introductions worth making.">
+<meta property="og:image" content="https://mhccog.github.io/heirloom-atlas/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="brand">
+    <svg class="seal" viewBox="0 0 64 64" aria-hidden="true"><use href="#seal"/></svg>
+    <div>
+      <h1>The Heirloom Atlas</h1>
+      <p class="line">I connect people who don't know they need each other.</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="btn ghost" id="btn-add" type="button" aria-label="Add a walk-in"><span aria-hidden="true">＋</span> <span class="hide-sm">Walk-in</span><span class="show-sm">Add</span></button>
+    <button class="btn ghost" id="btn-data" type="button" aria-label="Your data: export and import"><span class="hide-sm">Your data</span><span class="show-sm">Data</span></button>
+    <button class="btn ghost icon" id="btn-about" type="button" aria-label="About and sources">i</button>
+  </div>
+</header>
+
+<section class="dash" id="dash" aria-label="Progress"></section>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button role="tab" id="tab-people" aria-controls="view-people" aria-selected="true" data-tab="people"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="6" r="2.2"/><circle cx="13" cy="17" r="3"/><path d="M8.3 8.3 11 15M8.4 6.8l7.4-.6M16.9 8 14.3 14.4"/></svg><span>People</span></button>
+  <button role="tab" id="tab-intros" aria-controls="view-intros" aria-selected="false" data-tab="intros"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.6"/><circle cx="19" cy="12" r="2.6"/><path d="M7.8 12h8.4M13.5 9l2.7 3-2.7 3"/></svg><span>Introductions</span></button>
+  <button role="tab" id="tab-visits" aria-controls="view-visits" aria-selected="false" data-tab="visits"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20c2-6 4-3 6-8s5-4 8-8"/><circle cx="5" cy="20" r="1.8"/><circle cx="11" cy="12" r="1.8"/><circle cx="19" cy="4" r="1.8"/></svg><span>Visits</span></button>
+  <button role="tab" id="tab-where" aria-controls="view-where" aria-selected="false" data-tab="where"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c3 3 3 14 0 17M12 3.5c-3 3-3 14 0 17"/></svg><span>Where</span></button>
+</nav>
+
+<main id="main">
+  <section class="view" id="view-people" role="tabpanel" aria-labelledby="tab-people">
+    <div class="toolbar" id="filters">
+      <label class="search"><span class="sr">Search</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <input id="q" type="search" placeholder="Search people, trades, needs, notes" autocomplete="off">
+      </label>
+      <label class="sel"><span class="sr">Town</span><select id="f-town"></select></label>
+      <label class="sel"><span class="sr">Status</span><select id="f-stage"></select></label>
+      <div class="seg" role="group" aria-label="Layout">
+        <button type="button" data-layout="graph" aria-pressed="true">Web</button>
+        <button type="button" data-layout="list" aria-pressed="false">List</button>
+      </div>
+    </div>
+    <div class="chips" id="f-cats" role="group" aria-label="Trades"></div>
+    <div class="stage-wrap">
+      <div id="graph" class="graph" aria-label="Network of businesses and suggested introductions. Use the List layout for a text version."></div>
+      <div class="graph-hint" id="graph-hint">Tap a circle to see who they are and who they could meet. Pinch or scroll to zoom.</div>
+      <div class="graph-legend" id="graph-legend"></div>
+      <div id="list" class="list" hidden></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-intros" role="tabpanel" aria-labelledby="tab-intros" hidden></section>
+  <section class="view" id="view-visits" role="tabpanel" aria-labelledby="tab-visits" hidden></section>
+  <section class="view" id="view-where" role="tabpanel" aria-labelledby="tab-where" hidden>
+    <div class="map-wrap">
+      <div id="map" class="map" aria-label="Map of businesses"></div>
+      <div class="map-ui">
+        <div class="map-towns" id="map-towns"></div>
+        <button class="btn small" id="btn-globe" type="button" aria-pressed="false">Globe</button>
+      </div>
+      <div class="map-legend" id="map-legend"></div>
+      <div class="map-fallback" id="map-fallback" hidden></div>
+    </div>
+  </section>
+</main>
+
+<aside class="sheet" id="sheet" aria-hidden="true" aria-label="Person card" tabindex="-1">
+  <div class="sheet-grip" aria-hidden="true"></div>
+  <button class="sheet-close" id="sheet-close" type="button" aria-label="Close card">×</button>
+  <div class="sheet-body" id="sheet-body"></div>
+</aside>
+<div class="scrim" id="scrim" hidden></div>
+
+<div class="today" id="today" hidden role="dialog" aria-modal="true" aria-label="Today mode"></div>
+
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlg-body"></form></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="seal" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#fbf7ec" stroke="#2b2419" stroke-width="2"/>
+    <circle cx="32" cy="32" r="25.5" fill="none" stroke="#a8802f" stroke-width="1.2" stroke-dasharray="1.5 2.5"/>
+    <path d="M19 40 L32 21 L45 38" fill="none" stroke="#2b2419" stroke-width="1.6"/>
+    <path d="M19 40 L45 38" fill="none" stroke="#a8802f" stroke-width="1.6"/>
+    <circle cx="19" cy="40" r="5" fill="#8b2e2a"/><circle cx="32" cy="21" r="5" fill="#23476b"/><circle cx="45" cy="38" r="5" fill="#2f5d3a"/>
+  </symbol>
+</svg>
+<script src="vendor/force-graph.min.js" defer></script>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
