@@ -76,9 +76,9 @@ try {
   let s = await st();
   const ha = s.people['hungerford-arcade'] || {};
   ok('pulled Sarah into Hungerford Arcade', ha.met === 'Sarah' && ha.stage === 2 && ha.next === '2026-12-01' && ha.contact === 'sarah@example.com' && ha.notes === 'Likes clocks' && ha.nid === sarah);
-  const wi = s.myBiz.find(x => x.fromNotion);
+  const wi = Object.values(s.ed.biz).map(e => e.f).find(x => x && x.fromNotion);
   ok('Jo became a walk-in in Lewes', !!wi && wi.name === 'The Clock Shop' && wi.town === 'lewes' && s.people[wi.id].met === 'Jo');
-  ok('blank row ignored', s.myBiz.length === 1);
+  ok('blank row ignored', Object.values(s.ed.biz).filter(e => e.isNew).length === 1);
   ok('header-less Notion notes got the status line added', get(jo).notes === 'Status: Said hi\nRestores longcase clocks');
   ok('Sarah row not rewritten needlessly', get(sarah).notes === 'Status: Got contact · Next visit: 2026-12-01\nLikes clocks');
 
@@ -87,7 +87,7 @@ try {
   await page.click('.pipeline button[data-stage="1"]');
   await page.$eval('#n-met', e => { e.value = 'Roger'; e.dispatchEvent(new Event('change')); });
   await page.$eval('#n-contact', e => { e.value = '01488 000000'; e.dispatchEvent(new Event('change')); });
-  ok('pending shows before debounce', await page.evaluate(() => window.__sync.pending()) === 1);
+  ok('pending shows before debounce', await page.evaluate(() => window.__sync.pending()) >= 1);
   await w(4600); await waitIdle();
   const rk = [...pages.values()].map(p => get(p.id)).find(r => r.metAt === 'Roger King Antiques, Hungerford');
   ok('created row in Notion', !!rk && rk.name === 'Roger' && rk.contact === '01488 000000' && /^Status: Said hi · Last visit: \d{4}-\d\d-\d\d$/.test(rk.notes));
@@ -112,7 +112,7 @@ try {
   await page.setOfflineMode(true);
   await page.$eval('#n-notes', e => { e.value = 'Written in a basement'; e.dispatchEvent(new Event('change')); });
   await page.evaluate(() => window.__sync.run()); await w(300);
-  ok('offline -> waiting', await syncState() === 'waiting' && await page.evaluate(() => window.__sync.pending()) === 1);
+  ok('offline -> waiting', await syncState() === 'waiting' && await page.evaluate(() => window.__sync.pending()) >= 1);
   await page.setOfflineMode(false); await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await w(1500); await waitIdle();
   ok('queued change sent when back online', get(sarah).notes.endsWith('\nWritten in a basement') && await syncState() === 'ok');

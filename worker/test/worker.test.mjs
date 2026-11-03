@@ -95,7 +95,7 @@ test('retries politely on Notion 429', async () => {
   failNext = 429; const r = await req('GET', '/people'); assert.equal(r.status, 200); assert.equal(calls.length, 2);
 });
 test('unknown routes and methods', async () => {
-  assert.equal((await req('GET', '/admin')).status, 404); assert.equal((await req('DELETE', '/people/11111111111111111111111111111111')).status, 405);
+  assert.equal((await req('GET', '/admin')).status, 404); assert.equal((await req('PUT', '/people/11111111111111111111111111111111')).status, 405);
 });
 test('property helpers', () => {
   assert.equal(richText('x'.repeat(4100)).length, 3); assert.deepEqual(richText(''), []);

@@ -1,6 +1,7 @@
 // heirloom-atlas-sync: a tiny bridge between The Heirloom Atlas (static site) and the "People I've Met" Notion database.
 // Secrets (wrangler secret put): NOTION_TOKEN, APP_KEY. Vars (wrangler.toml): DATA_SOURCE_ID, ALLOWED_ORIGINS, NOTION_VERSION.
 import { pageToRow, rowToProperties, validateRow, pick, isPageId, sameId } from './notion.js';
+import { COLLECTIONS, toProps, fromPage, validate } from './collections.js';
 
 const NOTION = 'https://api.notion.com/v1';
 const MAX_BODY = 64 * 1024;
@@ -15,7 +16,7 @@ export async function handle(req, env) {
   const allowed = (env.ALLOWED_ORIGINS || 'https://mhccog.github.io').split(',').map(s => s.trim()).filter(Boolean);
   const cors = origin && allowed.includes(origin) ? {
     'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-App-Key',
     'Access-Control-Max-Age': '86400',
     'Vary': 'Origin',
@@ -30,6 +31,8 @@ export async function handle(req, env) {
   if (!env.APP_KEY || !env.NOTION_TOKEN || !env.DATA_SOURCE_ID) return json(500, { error: 'not_configured' });
   if (!(await keyOk(req.headers.get('X-App-Key'), env.APP_KEY))) return json(401, { error: 'bad_passphrase' });
 
+  const c = url.pathname.match(/^\/c\/([a-z]+)(?:\/([^/]+))?\/?$/);
+  if (c) return collection(req, env, url, c[1], c[2] ? decodeURIComponent(c[2]) : null, json);
   const m = url.pathname.match(/^\/people(?:\/([^/]+))?\/?$/);
   if (!m) return json(404, { error: 'not_found' });
   const id = m[1] ? decodeURIComponent(m[1]) : null;
@@ -57,6 +60,48 @@ export async function handle(req, env) {
       if (cur.in_trash) return json(410, { error: 'gone' });
       const page = await notion(env, 'PATCH', `/pages/${id}`, { properties: rowToProperties(pick(b)) });
       return json(200, pageToRow(page));
+    }
+    if (req.method === 'DELETE' && id) {
+      // Only when you delete a person in the app (with a confirm). Moves the row to Notion's Trash, where it can be restored.
+      if (!isPageId(id)) return json(400, { error: 'invalid_id' });
+      const cur = await notion(env, 'GET', `/pages/${id}`);
+      if (!inDataSource(cur, env.DATA_SOURCE_ID)) return json(404, { error: 'not_found' });
+      if (!cur.in_trash) await notion(env, 'PATCH', `/pages/${id}`, { in_trash: true });
+      return json(200, { id: cur.id, trashed: true });
+    }
+    return json(405, { error: 'method_not_allowed' });
+  } catch (e) {
+    const status = e.status === 404 ? 404 : e.status === 429 ? 429 : 502;
+    return json(status, { error: e.code || 'notion_error', detail: String(e.message || e).slice(0, 300) }, e.retryAfter ? { 'Retry-After': String(e.retryAfter) } : {});
+  }
+}
+
+// Businesses, introductions, and towns & lists. Delete never removes a row: it ticks Archived (house rule: archive, never delete).
+async function collection(req, env, url, name, id, json) {
+  const C = COLLECTIONS[name]; if (!C) return json(404, { error: 'not_found' });
+  const ds = env[C.env]; if (!ds) return json(500, { error: 'not_configured' });
+  try {
+    if (req.method === 'GET' && !id) {
+      const body = { page_size: clampInt(url.searchParams.get('limit'), 1, 100, 100) };
+      const cursor = url.searchParams.get('cursor'); if (cursor) body.start_cursor = cursor;
+      const r = await notion(env, 'POST', `/data_sources/${ds}/query`, body);
+      return json(200, { results: r.results.filter(p => p.object === 'page' && !p.in_trash).map(p => fromPage(name, p)), next_cursor: r.next_cursor || null, has_more: !!r.has_more });
+    }
+    if (req.method === 'POST' && !id) {
+      const b = await readJson(req); if (b.error) return json(400, b);
+      const bad = validate(name, b); if (bad) return json(400, { error: 'invalid', detail: bad });
+      const page = await notion(env, 'POST', '/pages', { parent: { type: 'data_source_id', data_source_id: ds }, properties: toProps(name, b) });
+      return json(201, fromPage(name, page));
+    }
+    if ((req.method === 'PATCH' || req.method === 'DELETE') && id) {
+      if (!isPageId(id)) return json(400, { error: 'invalid_id' });
+      let b = { archived: true };
+      if (req.method === 'PATCH') { b = await readJson(req); if (b.error) return json(400, b); const bad = validate(name, b); if (bad) return json(400, { error: 'invalid', detail: bad }); }
+      const cur = await notion(env, 'GET', `/pages/${id}`);
+      if (!inDataSource(cur, ds)) return json(404, { error: 'not_found' });
+      if (cur.in_trash) return json(410, { error: 'gone' });
+      const page = await notion(env, 'PATCH', `/pages/${id}`, { properties: toProps(name, b) });
+      return json(200, fromPage(name, page));
     }
     return json(405, { error: 'method_not_allowed' });
   } catch (e) {

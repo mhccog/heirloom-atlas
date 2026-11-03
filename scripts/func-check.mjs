@@ -22,7 +22,7 @@ await p.keyboard.press('Escape');
 await p.click('[data-tab=people]'); await w(300); await p.type('#q', 'silver'); await w(300);
 await p.click('.seg [data-layout=list]'); await w(300);
 const listN = await p.$$eval('#list .pcard', a => a.length);
-const st = await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('heirloom-atlas/v1')); return { myBiz: s.myBiz.length, myIntros: s.myIntros.length }; });
+const st = await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('heirloom-atlas/v1')); return { added: Object.values(s.ed.biz).filter(e => e.isNew).length, myIntros: Object.values(s.ed.intro).filter(e => e.isNew).length }; });
 await p.evaluate(() => localStorage.removeItem('heirloom-atlas/v1'));
 const fs = await import('fs'); const files = fs.existsSync('/tmp/ha-dl') ? fs.readdirSync('/tmp/ha-dl') : [];
 console.log(JSON.stringify({ card, mineIntrosShown: mine, listMatchesSilver: listN, st, downloads: files, errs }));

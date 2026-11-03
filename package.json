@@ -8,7 +8,10 @@
     "shots": "node scripts/shots.mjs",
     "test": "node --test test/*.test.mjs worker/test/*.test.mjs",
     "test:sync-e2e": "node scripts/sync-e2e.mjs",
-    "deploy:sync": "scripts/deploy-sync.sh"
+    "deploy:sync": "scripts/deploy-sync.sh",
+    "test:content-e2e": "node scripts/content-e2e.mjs",
+    "seed:notion": "node scripts/seed-notion.mjs",
+    "icons": "node scripts/icons.mjs"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +20,11 @@
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource-variable/source-sans-3": "^5.3.1",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "force-graph": "^1.52.0",
+    "lucide-static": "^1.67.0",
     "maplibre-gl": "^5.24.0",
     "puppeteer-core": "^24.43.1"
   },

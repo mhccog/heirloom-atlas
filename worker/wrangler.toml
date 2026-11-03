@@ -8,3 +8,6 @@ workers_dev = true
 DATA_SOURCE_ID = "073f4d29-a404-4ed0-ad5d-70bc7674b385"   # People I've Met
 ALLOWED_ORIGINS = "https://mhccog.github.io"
 NOTION_VERSION = "2026-03-11"
+BIZ_DS = "6282e694-a13b-4dc4-9b89-225918bb940f"     # Heirloom Atlas – Businesses
+INTRO_DS = "61d4563b-b966-4510-88c1-840cf2d87bda"   # Heirloom Atlas – Introductions
+NOTE_DS = "84c00f67-edd5-44a7-b15e-9192cd89315d"    # Heirloom Atlas – Towns & lists

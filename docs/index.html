@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Heirloom Atlas · people who should know each other</title>
 <meta name="description" content="Cyrus's walk-in networking atlas: 45 heirloom-trade businesses across 7 towns, who to meet, what they need, and who they could meet.">
-<meta name="theme-color" content="#f6f0e1">
+<meta name="theme-color" content="#f4efe4">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -14,8 +14,8 @@
 <meta property="og:image" content="https://mhccog.github.io/heirloom-atlas/og.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preload" href="fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/source-sans-3-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -29,27 +29,28 @@
     </div>
   </div>
   <div class="top-actions">
-    <button class="btn ghost" id="btn-add" type="button" aria-label="Add a walk-in"><span aria-hidden="true">＋</span> <span class="hide-sm">Walk-in</span><span class="show-sm">Add</span></button>
-    <button class="btn ghost" id="btn-data" type="button" aria-label="Your data: export and import"><span class="hide-sm">Your data</span><span class="show-sm">Data</span></button>
+    <button class="btn ghost" id="btn-add" type="button" aria-label="Add a business you walked into"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-user-plus"/></svg><span class="hide-sm">Add</span></button>
+    <button class="btn ghost" id="btn-edit" type="button" aria-pressed="false" aria-label="Edit mode"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-pencil"/></svg><span class="hide-sm">Edit</span></button>
     <button class="btn ghost sync-btn" id="btn-sync" type="button" data-state="off" aria-label="Notion sync" title="Notion sync"><i class="sync-dot" aria-hidden="true"></i><span class="hide-sm">Notion</span></button>
-    <button class="btn ghost icon" id="btn-about" type="button" aria-label="About and sources">i</button>
+    <button class="btn ghost icon" id="btn-data" type="button" aria-label="Your data: backup and export"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download"/></svg></button>
+    <button class="btn ghost icon" id="btn-about" type="button" aria-label="About and sources"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-info"/></svg></button>
   </div>
 </header>
 
-<section class="dash" id="dash" aria-label="Progress"></section>
+<section class="dash" id="dash" aria-label="Next step"></section>
 
 <nav class="tabs" role="tablist" aria-label="Sections">
-  <button role="tab" id="tab-people" aria-controls="view-people" aria-selected="true" data-tab="people"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="6" r="2.2"/><circle cx="13" cy="17" r="3"/><path d="M8.3 8.3 11 15M8.4 6.8l7.4-.6M16.9 8 14.3 14.4"/></svg><span>People</span></button>
-  <button role="tab" id="tab-intros" aria-controls="view-intros" aria-selected="false" data-tab="intros"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.6"/><circle cx="19" cy="12" r="2.6"/><path d="M7.8 12h8.4M13.5 9l2.7 3-2.7 3"/></svg><span>Introductions</span></button>
-  <button role="tab" id="tab-visits" aria-controls="view-visits" aria-selected="false" data-tab="visits"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20c2-6 4-3 6-8s5-4 8-8"/><circle cx="5" cy="20" r="1.8"/><circle cx="11" cy="12" r="1.8"/><circle cx="19" cy="4" r="1.8"/></svg><span>Visits</span></button>
-  <button role="tab" id="tab-where" aria-controls="view-where" aria-selected="false" data-tab="where"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c3 3 3 14 0 17M12 3.5c-3 3-3 14 0 17"/></svg><span>Where</span></button>
+  <button role="tab" id="tab-people" aria-controls="view-people" aria-selected="true" data-tab="people"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-users"/></svg><span>People</span></button>
+  <button role="tab" id="tab-intros" aria-controls="view-intros" aria-selected="false" data-tab="intros"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-arrow-left-right"/></svg><span>Introductions</span></button>
+  <button role="tab" id="tab-visits" aria-controls="view-visits" aria-selected="false" data-tab="visits"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-route"/></svg><span>Visits</span></button>
+  <button role="tab" id="tab-where" aria-controls="view-where" aria-selected="false" data-tab="where"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-map"/></svg><span>Where</span></button>
 </nav>
 
 <main id="main">
   <section class="view" id="view-people" role="tabpanel" aria-labelledby="tab-people">
     <div class="toolbar" id="filters">
       <label class="search"><span class="sr">Search</span>
-        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-search"/></svg>
         <input id="q" type="search" placeholder="Search people, trades, needs, notes" autocomplete="off">
       </label>
       <label class="sel"><span class="sr">Town</span><select id="f-town"></select></label>
@@ -75,7 +76,7 @@
       <div id="map" class="map" aria-label="Map of businesses"></div>
       <div class="map-ui">
         <div class="map-towns" id="map-towns"></div>
-        <button class="btn small" id="btn-globe" type="button" aria-pressed="false">Globe</button>
+        <button class="btn small" id="btn-globe" type="button" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-globe"/></svg>Globe</button>
       </div>
       <div class="map-legend" id="map-legend"></div>
       <div class="map-fallback" id="map-fallback" hidden></div>
@@ -85,7 +86,7 @@
 
 <aside class="sheet" id="sheet" aria-hidden="true" aria-label="Person card" tabindex="-1">
   <div class="sheet-grip" aria-hidden="true"></div>
-  <button class="sheet-close" id="sheet-close" type="button" aria-label="Close card">×</button>
+  <button class="sheet-close" id="sheet-close" type="button" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-x"/></svg></button>
   <div class="sheet-body" id="sheet-body"></div>
 </aside>
 <div class="scrim" id="scrim" hidden></div>
@@ -93,6 +94,7 @@
 <div class="today" id="today" hidden role="dialog" aria-modal="true" aria-label="Today mode"></div>
 
 <dialog id="dlg"><form method="dialog" class="dlg" id="dlg-body"></form></dialog>
+<div class="editbar" id="editbar" hidden role="toolbar" aria-label="Edit mode"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -107,6 +109,7 @@
 <script src="vendor/force-graph.min.js" defer></script>
 <script src="assets/sync-config.js" defer></script>
 <script src="assets/notion-map.js" defer></script>
+<script src="assets/content.js" defer></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>
