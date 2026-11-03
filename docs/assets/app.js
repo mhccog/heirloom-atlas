@@ -932,16 +932,17 @@ const Sync = (() => {
     }
     return n;
   }
+  let colls = {}; const collErr = {};
   function setState(s, d) {
     state = s; detail = d || ''; const b = $('#btn-sync'); if (!b) return;
     const n = pending();
-    const label = { off: 'Notion sync is off', ok: 'Synced with Notion', syncing: 'Syncing with Notion…', waiting: `Offline: ${n} change${n === 1 ? '' : 's'} waiting`, error: 'Notion sync problem' }[s] || s;
+    const label = { off: 'Notion sync is off', ok: 'Synced with Notion', partial: 'Partly synced with Notion', syncing: 'Syncing with Notion…', waiting: `Offline: ${n} change${n === 1 ? '' : 's'} waiting`, error: 'Notion sync problem' }[s] || s;
     b.dataset.state = s; b.title = label + (detail ? ' · ' + detail : ''); b.setAttribute('aria-label', b.title);
     const t = $('#sync-status'); if (t) t.innerHTML = statusLine();
   }
   function statusLine() {
     const n = pending(); const when = cfg.last ? new Date(cfg.last).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
-    const txt = { off: 'Off on this device.', ok: `Synced${when ? ' ' + when : ''}.${n ? ` ${n} change${n === 1 ? '' : 's'} to send.` : ''}`, syncing: 'Syncing now…', waiting: `You're offline. ${n} change${n === 1 ? '' : 's'} will send when you're back.`, error: 'Last sync failed.' }[state];
+    const txt = { off: 'Off on this device.', ok: `Synced${when ? ' ' + when : ''}.${n ? ` ${n} change${n === 1 ? '' : 's'} to send.` : ''}`, partial: `Partly synced${when ? ' ' + when : ''}.${n ? ` ${n} change${n === 1 ? '' : 's'} waiting.` : ''}`, syncing: 'Syncing now…', waiting: `You're offline. ${n} change${n === 1 ? '' : 's'} will send when you're back.`, error: 'Last sync failed.' }[state];
     return `<i class="sync-dot" data-state="${state}"></i> ${esc(txt)}${detail ? ` <span class="muted">${esc(detail)}</span>` : ''}`;
   }
 
@@ -1093,11 +1094,28 @@ const Sync = (() => {
       // people you deleted here: their Notion rows go to Trash
       for (const nid of (S.peopleTrash || []).slice()) { try { await api('DELETE', '/people/' + encodeURIComponent(nid)); } catch (e) { if (e.offline) throw e; if (e.status !== 404 && e.status !== 410) throw e; } S.peopleTrash = S.peopleTrash.filter(x => x !== nid); save(); made++; await gap(); }
       // businesses, introductions, and towns & lists
-      const cs = { sent: 0, pulled: 0, added: 0 }; let notShared = false;
-      for (const coll of C.COLLS) { try { await syncColl(coll, cs); } catch (e) { if ((e.status === 404 && /object_not_found|Could not find/i.test(e.message || '')) || (e.status === 500 && /not_configured/.test(e.message || '')) || (e.status === 404 && /not_found/.test(e.message || ''))) notShared = true; else throw e; } }
+      const cs = { sent: 0, pulled: 0, added: 0 }; colls = { people: 'ok' };
+      for (const coll of C.COLLS) {
+        try { await syncColl(coll, cs); colls[coll] = 'ok'; }
+        catch (e) {
+          if (e.offline) throw e;
+          colls[coll] = ((e.status === 404 && /not_found|Could not find/i.test(e.message || '')) || (e.status === 500 && /not_configured/.test(e.message || ''))) ? 'unshared' : 'error';
+          collErr[coll] = e.message || String(e.status || '');
+        }
+      }
       made += cs.sent; pulled += cs.pulled; added += cs.added;
       cfg.last = Date.now(); saveCfg(); retryMs = 0;
-      setState('ok', [made && `${made} sent`, pulled && `${pulled} updated from Notion`, added && `${added} new from Notion`, notShared && 'Businesses, Introductions or Towns & lists aren\'t shared with the sync integration yet'].filter(Boolean).join(' · '));
+      const nameOf = { biz: 'Businesses', intro: 'Introductions', list: 'Towns & lists' };
+      const bad = C.COLLS.filter(c => colls[c] !== 'ok');
+      const unshared = bad.filter(c => colls[c] === 'unshared').map(c => nameOf[c]), failed = bad.filter(c => colls[c] === 'error').map(c => nameOf[c]);
+      const done = [made && `${made} sent`, pulled && `${pulled} updated from Notion`, added && `${added} new from Notion`];
+      if (!bad.length) setState('ok', done.filter(Boolean).join(' · '));
+      else {
+        setState('partial', [`People${C.COLLS.filter(c => colls[c] === 'ok').map(c => ', ' + nameOf[c]).join('')} synced`, ...done,
+          unshared.length && `${unshared.join(', ')} not shared with the sync integration yet; those changes wait here`,
+          failed.length && `${failed.join(', ')} failed to sync, will retry`].filter(Boolean).join(' · '));
+        if (failed.length) retryLater();
+      }
       if (cs.pulled || cs.added) { rebuild(); afterChange(); if (tab === 'intros') renderIntros(); }
       if (focusId && (pulled || added) && $('#sheet').classList.contains('open') && !document.activeElement?.closest?.('#sheet')) openCard(focusId);
       if (pulled || added) toast(`Notion: ${[pulled && `${pulled} updated`, added && `${added} new walk-in${added === 1 ? '' : 's'}`].filter(Boolean).join(', ')}`);
@@ -1140,7 +1158,7 @@ const Sync = (() => {
     setInterval(() => { if (on() && document.visibilityState === 'visible' && !busy) run(); }, 10 * 60e3);
     if (on()) { setState('ok'); run(); } else setState('off');
   }
-  return { init, run, schedule, dialog, on, pending, _state: () => state };
+  return { init, run, schedule, dialog, on, pending, _state: () => state, _colls: () => Object.assign({}, colls) };
 })();
 window.__sync = Sync;
 // hooks for the local end-to-end checks (scripts/*-e2e.mjs); harmless in normal use

@@ -23,6 +23,8 @@ try {
   await p.evaluate(k => { localStorage.clear(); localStorage.setItem('heirloom-atlas/sync', JSON.stringify({ key: k })); }, KEY);
   await p.reload({ waitUntil: 'load' }); await p.waitForFunction('window.__ready'); await w(800); await sync();
   ok('live sync runs', await p.evaluate(() => window.__sync._state()) === 'ok');
+  results.collections = await p.evaluate(() => window.__sync._colls());
+  if (shared) ok('all collections sync', Object.values(results.collections).every(v => v === 'ok'));
   results.status = await p.$eval('#btn-sync', e => e.title.replace(/\d{1,2} \w{3}, \d\d:\d\d/, ''));
   // 1. people: app -> Notion
   await p.click('#btn-add'); await w(300);
