@@ -5,7 +5,10 @@
   "scripts": {
     "data": "node scripts/build-data.mjs data/raw.json docs/assets/data.json",
     "art": "node scripts/art.mjs",
-    "shots": "node scripts/shots.mjs"
+    "shots": "node scripts/shots.mjs",
+    "test": "node --test test/*.test.mjs worker/test/*.test.mjs",
+    "test:sync-e2e": "node scripts/sync-e2e.mjs",
+    "deploy:sync": "scripts/deploy-sync.sh"
   },
   "keywords": [],
   "author": "",

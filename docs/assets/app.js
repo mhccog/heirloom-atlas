@@ -24,8 +24,14 @@ function load() {
   return blank();
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('Could not save on this device (storage full or private mode).'); } }
-const P = id => S.people[id] || { stage: 0, notes: '', met: '', last: '', next: '', log: [] };
-function setP(id, patch) { S.people[id] = Object.assign({}, P(id), patch); save(); }
+const P = id => S.people[id] || { stage: 0, notes: '', met: '', contact: '', last: '', next: '', log: [] };
+const SYNCED = ['stage', 'notes', 'met', 'contact', 'last', 'next'];
+// Every change to a field that syncs with Notion gets a local timestamp (for "newest edit wins") and schedules a sync.
+function setP(id, patch) {
+  const before = P(id); const touched = SYNCED.some(k => k in patch && String(patch[k] ?? '') !== String(before[k] ?? ''));
+  S.people[id] = Object.assign({}, before, patch, touched ? { updated: Date.now() } : {}); save();
+  if (touched) Sync.schedule();
+}
 
 function rebuild() {
   BIZ = D.biz.concat(S.myBiz.map(b => Object.assign({ custom: true, potential: 1, ask: { who: b.askWho || 'Your notes' }, persona: 'dealer', opener: '', need: b.need || '', offers: b.offers || '' }, b)));
@@ -49,7 +55,7 @@ function matches(b) {
   if (F.stage === 'due') { if (!(p.next && p.next <= addDays(todayISO(), 7))) return false; }
   else if (F.stage !== 'all' && String(p.stage) !== F.stage) return false;
   if (F.q) {
-    const hay = [b.name, b.type, town(b.town).name, b.need, b.offers, b.why, cat(b.cat).name, p.notes, p.met, b.addr].join(' ').toLowerCase();
+    const hay = [b.name, b.type, town(b.town).name, b.need, b.offers, b.why, cat(b.cat).name, p.notes, p.met, p.contact, b.addr].join(' ').toLowerCase();
     if (!F.q.toLowerCase().split(/\s+/).every(w => hay.includes(w))) return false;
   }
   return true;
@@ -283,6 +289,7 @@ function openCard(id) {
     <div class="sec"><h3>Your notes</h3>
       <div class="note-box">
         <label class="field">Who you met (their real name, once they've told you)<input class="inp" id="n-met" value="${esc(p.met)}" placeholder="e.g. the owner, Sarah" autocomplete="off"></label>
+        <label class="field">Contact (phone, email or handle they gave you)<input class="inp" id="n-contact" value="${esc(p.contact || '')}" placeholder="e.g. 07700 900123 or sarah@…" autocomplete="off"></label>
         <label class="field">Notes: what they need, one personal detail, what to try next<textarea class="inp" id="n-notes" placeholder="What I tried, what happened, what I'll try next">${esc(p.notes)}</textarea></label>
         <div class="row2"><label class="field">Last visit<input class="inp" type="date" id="n-last" value="${esc(p.last)}"></label><label class="field">Next visit<input class="inp" type="date" id="n-next" value="${esc(p.next)}"></label></div>
         <div class="row"><button class="btn small gold" type="button" id="n-today">Visited today</button><button class="btn small" type="button" data-plus="28">Back in 4 weeks</button><button class="btn small" type="button" data-plus="42">6 weeks</button>${p.next ? `<button class="btn small" type="button" id="n-ics">Add to calendar (.ics)</button>` : ''}</div>
@@ -294,7 +301,8 @@ function openCard(id) {
       ${b.web ? `<dt>Website</dt><dd><a href="${esc(b.web)}" target="_blank" rel="noopener">${esc(b.web.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''))}</a></dd>` : ''}
       ${b.phone ? `<dt>Shop phone</dt><dd>${esc(b.phone)}</dd>` : ''}
       <dt>Town</dt><dd>${esc(T.name)}${T.day ? ` · best day: ${esc(T.day)}` : ''}</dd>
-      <dt>Source</dt><dd class="small">${b.custom ? 'Added by you' : 'Network towns research, 2 Nov 2026 (Companies House and local directories)'}</dd>
+      <dt>Source</dt><dd class="small">${b.fromNotion ? `From your Notion “People I've Met”${b.townGuessed ? ' (town not given there, so placed in ' + esc(T.name) + ')' : ''}` : b.custom ? 'Added by you' : 'Network towns research, 2 Nov 2026 (Companies House and local directories)'}</dd>
+      ${p.nid ? `<dt>Notion</dt><dd class="small"><a href="https://www.notion.so/${esc(String(p.nid).replace(/-/g, ''))}" target="_blank" rel="noopener">Open in People I've Met</a></dd>` : ''}
     </dl>
     ${b.custom ? `<div class="row" style="margin-top:10px"><button class="btn small" type="button" id="n-del">Remove this walk-in</button></div>` : ''}</div>`;
   const sh = $('#sheet'); sh.classList.add('open'); sh.setAttribute('aria-hidden', 'false'); $('#scrim').hidden = innerWidth >= 720;
@@ -308,13 +316,14 @@ function wireCard(id) {
   const body = $('#sheet-body');
   $$('.pipeline button', body).forEach(btn => btn.onclick = () => setStage(id, +btn.dataset.stage));
   $('#n-met', body).onchange = e => { setP(id, { met: e.target.value.trim() }); toast('Saved'); };
+  $('#n-contact', body).onchange = e => { setP(id, { contact: e.target.value.trim() }); toast('Saved'); };
   $('#n-notes', body).onchange = e => { setP(id, { notes: e.target.value }); toast('Saved'); };
   $('#n-last', body).onchange = e => { setP(id, { last: e.target.value }); renderDash(); };
   $('#n-next', body).onchange = e => { setP(id, { next: e.target.value }); renderDash(); openCard(id); };
   $('#n-today', body).onclick = () => { logVisit(id); openCard(id); toast('Visit logged for today'); };
   $$('[data-plus]', body).forEach(b => b.onclick = () => { setP(id, { next: addDays(P(id).last || todayISO(), +b.dataset.plus) }); renderDash(); openCard(id); toast('Next visit set'); });
   const ics = $('#n-ics', body); if (ics) ics.onclick = () => downloadICS(id);
-  const del = $('#n-del', body); if (del) del.onclick = () => { if (!confirm('Remove this walk-in and its notes from this device?')) return; S.myBiz = S.myBiz.filter(b => b.id !== id); delete S.people[id]; S.myIntros = S.myIntros.filter(i => i.a !== id && i.b !== id); save(); rebuild(); closeCard(); afterChange(); toast('Removed'); };
+  const del = $('#n-del', body); if (del) del.onclick = () => { if (!confirm(P(id).nid ? 'Remove this walk-in from the app? Its row stays in Notion, and the app will stop syncing it.' : 'Remove this walk-in and its notes from this device?')) return; if (P(id).nid) S.syncIgnore = (S.syncIgnore || []).concat(P(id).nid); S.myBiz = S.myBiz.filter(b => b.id !== id); delete S.people[id]; S.myIntros = S.myIntros.filter(i => i.a !== id && i.b !== id); save(); rebuild(); closeCard(); afterChange(); toast('Removed'); };
 }
 function logVisit(id) { const p = P(id); const t = todayISO(); const log = (p.log || []).slice(); if (!log.some(l => l.date === t && l.visit)) log.push({ date: t, visit: true, stage: p.stage }); setP(id, { last: t, log, stage: Math.max(p.stage, 1), next: p.next && p.next > t ? p.next : '' }); renderDash(); kick(); }
 function setStage(id, st) {
@@ -397,6 +406,7 @@ function walkinDialog() {
     <label class="field">Trade<select class="inp" name="cat">${D.cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></label></div>
     <label class="field">What they do<input class="inp" name="type" placeholder="e.g. Silver dealer" autocomplete="off"></label>
     <label class="field">Who you met (their real name, if they gave it)<input class="inp" name="met" autocomplete="off"></label>
+    <label class="field">Contact (phone, email or handle)<input class="inp" name="contact" autocomplete="off"></label>
     <label class="field">Address<input class="inp" name="addr" autocomplete="off"></label>
     <label class="field">Website<input class="inp" name="web" type="url" placeholder="https://" autocomplete="off"></label>
     <label class="field">Their need (your guess)<input class="inp" name="need" autocomplete="off"></label>
@@ -409,8 +419,8 @@ function walkinDialog() {
     const id = 'walkin-' + Date.now().toString(36);
     let web = fd.get('web').trim(); if (web && !/^https?:\/\//.test(web)) web = 'https://' + web;
     S.myBiz.push({ id, name: fd.get('name').trim(), town: t.id, cat: +fd.get('cat'), type: fd.get('type').trim() || 'Walk-in', addr: fd.get('addr').trim(), web, need: fd.get('need').trim(), offers: fd.get('offers').trim(), why: '', la, lo, approx, added: todayISO() });
-    S.people[id] = { stage: 1, notes: fd.get('notes'), met: fd.get('met').trim(), last: todayISO(), next: '', log: [{ date: todayISO(), visit: true, stage: 1 }] };
-    save(); rebuild(); afterChange(); openCard(id); toast('Walk-in added');
+    S.people[id] = { stage: 1, notes: fd.get('notes'), met: fd.get('met').trim(), contact: fd.get('contact').trim(), last: todayISO(), next: '', log: [{ date: todayISO(), visit: true, stage: 1 }], updated: Date.now() };
+    save(); rebuild(); afterChange(); openCard(id); toast('Walk-in added'); Sync.schedule();
   });
 }
 function openDialog(html, onOk) {
@@ -580,8 +590,8 @@ function toggleGlobe(force) {
 /* ---------------- data dialogs ---------------- */
 function csvCell(v) { v = String(v ?? ''); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
 function exportCSV() {
-  const rows = [['Business', 'Town', 'Trade', 'Type', 'Status', 'Who you met', 'Last visit', 'Next visit', 'Their need (guess)', 'Could connect with', 'Notes', 'Address', 'Website', 'Phone', 'Added by you']];
-  for (const b of BIZ) { const p = P(b.id); rows.push([b.name, town(b.town).name, cat(b.cat).name, b.type, STAGES[p.stage], p.met, p.last, p.next, b.need, partners(b.id).map(x => x.other.name).join('; '), p.notes, b.addr, b.web, b.phone || '', b.custom ? 'yes' : '']); }
+  const rows = [['Business', 'Town', 'Trade', 'Type', 'Status', 'Who you met', 'Contact', 'Last visit', 'Next visit', 'Their need (guess)', 'Could connect with', 'Notes', 'Address', 'Website', 'Phone', 'Added by you']];
+  for (const b of BIZ) { const p = P(b.id); rows.push([b.name, town(b.town).name, cat(b.cat).name, b.type, STAGES[p.stage], p.met, p.contact || '', p.last, p.next, b.need, partners(b.id).map(x => x.other.name).join('; '), p.notes, b.addr, b.web, b.phone || '', b.custom ? 'yes' : '']); }
   const intros = [['A', 'B', 'Why', 'Kind', 'Strength', 'Status', 'Yours']]; for (const i of INTROS) intros.push([BY[i.a].name, BY[i.b].name, i.why, i.kind, i.strength, introState(i), i.mine ? 'yes' : '']);
   const csv = '\ufeff' + rows.map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n\r\nIntroductions\r\n' + intros.map(r => r.map(csvCell).join(',')).join('\r\n');
   dl(new Blob([csv], { type: 'text/csv' }), `heirloom-atlas-${todayISO()}.csv`);
@@ -589,7 +599,7 @@ function exportCSV() {
 function exportJSON() { dl(new Blob([JSON.stringify({ app: 'heirloom-atlas', exported: new Date().toISOString(), state: S }, null, 1)], { type: 'application/json' }), `heirloom-atlas-backup-${todayISO()}.json`); S.prefs.lastBackup = todayISO(); save(); }
 function dataDialog() {
   const n = Object.values(S.people).filter(p => p.stage > 0 || p.notes || p.met).length;
-  openDialog(`<h2>Your data</h2><p>Everything you record lives only in this browser on this device: ${n} people with notes or a status, ${S.myBiz.length} walk-ins, ${S.myIntros.length} of your own introductions. Nothing is sent anywhere.</p>
+  openDialog(`<h2>Your data</h2><p>Everything you record lives in this browser on this device: ${n} people with notes or a status, ${S.myBiz.length} walk-ins, ${S.myIntros.length} of your own introductions. ${Sync.on() ? 'People, statuses, contacts and notes also sync to your Notion “People I\'ve Met”; introductions stay here.' : 'Nothing is sent anywhere unless you turn on Notion sync.'}</p>
     <p>${S.prefs.lastBackup ? `Last backup: ${fmtDate(S.prefs.lastBackup)}.` : 'No backup yet.'} Save a backup now and then so you never lose it, and to move to another phone.</p>
     <div class="row"><button class="btn primary" type="button" id="d-json">Save backup (.json)</button><button class="btn" type="button" id="d-csv">Export spreadsheet (.csv)</button></div>
     <label class="field">Restore from a backup<input class="inp" type="file" id="d-file" accept="application/json,.json"></label>
@@ -602,7 +612,7 @@ function dataDialog() {
       S = Object.assign(blank(), st); save(); rebuild(); if (graph) syncGraphData(true); afterChange(); $('#dlg').close(); toast('Backup restored');
     } catch (err) { toast("That file isn't a Heirloom Atlas backup"); }
   };
-  $('#d-reset').onclick = () => { if (!confirm('Erase all your statuses, notes, walk-ins and introductions on this device? Save a backup first if unsure.')) return; S = blank(); save(); rebuild(); if (graph) syncGraphData(true); afterChange(); $('#dlg').close(); toast('Erased'); };
+  $('#d-reset').onclick = () => { if (!confirm(`Erase all your statuses, notes, walk-ins and introductions on this device? Save a backup first if unsure.${Sync.on() ? ' Your Notion rows are not deleted, and will sync back in next time.' : ''}`)) return; S = blank(); save(); rebuild(); if (graph) syncGraphData(true); afterChange(); $('#dlg').close(); toast('Erased'); };
 }
 function aboutDialog() {
   openDialog(`<h2>About this atlas</h2>
@@ -611,7 +621,7 @@ function aboutDialog() {
     <li>“Their need”, “How to approach” and every introduction are suggestions derived from each business's type and role. Test them in person.</li>
     <li>No people are named unless the source names them. Record the real names you're given in your notes.</li>
     <li>${D.biz.filter(b => b.approx).length} pins are approximate (${D.biz.filter(b => b.approx).map(b => esc(b.name)).join(', ')}); the rest sit on the postcode point.</li>
-    <li>Nothing here contacts anyone. Your notes stay on this device.</li></ul>
+    <li>Nothing here contacts anyone. Your notes stay on this device${Sync.on() ? ', and sync privately to your own Notion database' : ''}.</li></ul>
     <p class="small">Sources: ${D.sources.map(s => `<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(' · ')}</p>
     <p class="tiny muted">Built with force-graph (MIT), MapLibre GL JS (BSD), OpenFreeMap tiles © OpenMapTiles © OpenStreetMap contributors, Fraunces and Inter (OFL).</p>
     <div class="acts"><button class="btn primary" value="cancel" formnovalidate>Close</button></div>`, () => true);
@@ -632,7 +642,7 @@ async function boot() {
   });
   $('#sheet-close').onclick = closeCard; $('#scrim').onclick = closeCard;
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#today').hidden) closeToday(); else if ($('#sheet').classList.contains('open')) closeCard(); } });
-  $('#btn-data').onclick = dataDialog; $('#btn-about').onclick = aboutDialog; $('#btn-add').onclick = walkinDialog;
+  $('#btn-data').onclick = dataDialog; $('#btn-about').onclick = aboutDialog; $('#btn-add').onclick = walkinDialog; $('#btn-sync').onclick = Sync.dialog;
   // swipe down to close the sheet on phones
   let y0 = null; const sh = $('#sheet');
   sh.addEventListener('touchstart', e => { if ($('#sheet-body').scrollTop <= 0) y0 = e.touches[0].clientY; }, { passive: true });
@@ -643,7 +653,162 @@ async function boot() {
   go(['people', 'intros', 'visits', 'where'].includes(h) ? h : 'people');
   if (id && BY[id]) setTimeout(() => openCard(id), 300);
   if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => { });
+  Sync.init();
   window.__ready = true;
 }
+/* ---------------- Notion sync ----------------
+   Talks only to the heirloom-atlas-sync Worker, which holds the Notion key. The passphrase lives in its own
+   localStorage entry, so backups and exports never contain it. Pending changes are simply records whose
+   content differs from what Notion last confirmed, so they survive reloads and retry when you're back online. */
+const Sync = (() => {
+  const NM = window.NotionMap;
+  const CK = 'heirloom-atlas/sync';
+  const DEF = (window.HEIRLOOM_SYNC && window.HEIRLOOM_SYNC.url) || '';
+  let cfg = {}; try { cfg = JSON.parse(localStorage.getItem(CK)) || {}; } catch (e) { cfg = {}; }
+  const saveCfg = () => { try { localStorage.setItem(CK, JSON.stringify(cfg)); } catch (e) { } };
+  const url = () => String(cfg.url || DEF || '').replace(/\/+$/, '');
+  const on = () => !!(NM && url() && cfg.key && !cfg.off);
+  let state = 'off', detail = '', busy = false, again = false, timer = null, retryMs = 0;
+  const sid = id => String(id || '').replace(/-/g, '').toLowerCase();
+
+  function rowFor(b) { const p = P(b.id); const r = NM.toRow(b, p, town(b.town).name); if (b.metAt) r.metAt = b.metAt; return r; }
+  function pending() {
+    if (!on()) return 0; let n = 0;
+    for (const b of BIZ) { const p = S.people[b.id]; if (!p) continue;
+      if (p.nid) { if (NM.rowHash(rowFor(b)) !== p.nHash) n++; }
+      else if (NM.hasData(p) && !(p.nGoneAt && (p.updated || 0) <= p.nGoneAt)) n++; }
+    return n;
+  }
+  function setState(s, d) {
+    state = s; detail = d || ''; const b = $('#btn-sync'); if (!b) return;
+    const n = pending();
+    const label = { off: 'Notion sync is off', ok: 'Synced with Notion', syncing: 'Syncing with Notion…', waiting: `Offline: ${n} change${n === 1 ? '' : 's'} waiting`, error: 'Notion sync problem' }[s] || s;
+    b.dataset.state = s; b.title = label + (detail ? ' · ' + detail : ''); b.setAttribute('aria-label', b.title);
+    const t = $('#sync-status'); if (t) t.innerHTML = statusLine();
+  }
+  function statusLine() {
+    const n = pending(); const when = cfg.last ? new Date(cfg.last).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+    const txt = { off: 'Off on this device.', ok: `Synced${when ? ' ' + when : ''}.${n ? ` ${n} change${n === 1 ? '' : 's'} to send.` : ''}`, syncing: 'Syncing now…', waiting: `You're offline. ${n} change${n === 1 ? '' : 's'} will send when you're back.`, error: 'Last sync failed.' }[state];
+    return `<i class="sync-dot" data-state="${state}"></i> ${esc(txt)}${detail ? ` <span class="muted">${esc(detail)}</span>` : ''}`;
+  }
+
+  async function api(method, path, body) {
+    let res;
+    try { res = await fetch(url() + path, { method, headers: { 'X-App-Key': cfg.key, ...(body ? { 'Content-Type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' }); }
+    catch (e) { const er = new Error('offline'); er.offline = true; throw er; }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { const er = new Error(data.detail || data.error || ('HTTP ' + res.status)); er.status = res.status; er.retryAfter = +res.headers.get('Retry-After') || 0; throw er; }
+    return data;
+  }
+  async function pullAll() {
+    const out = []; let cursor = null;
+    for (let i = 0; i < 50; i++) { const r = await api('GET', '/people?limit=100' + (cursor ? '&cursor=' + encodeURIComponent(cursor) : '')); out.push(...r.results); if (!r.has_more || !r.next_cursor) break; cursor = r.next_cursor; }
+    return out;
+  }
+  const gap = () => new Promise(r => setTimeout(r, 350)); // stay well under Notion's ~3 requests a second
+
+  function link(id, row) { const p = Object.assign({}, P(id)); p.nid = row.id; p.nHash = NM.rowHash(row); p.nEdited = row.lastEdited; delete p.nGoneAt; S.people[id] = p; }
+  function applyRemote(b, row) {
+    const cur = P(b.id); const patch = NM.fromRow(row, b, S.people[b.id]);
+    const log = (cur.log || []).slice(); if (patch.stage != null && patch.stage !== cur.stage) log.push({ date: todayISO(), stage: patch.stage, from: 'notion' });
+    S.people[b.id] = Object.assign({}, cur, patch, { log, updated: Date.parse(row.lastEdited) || Date.now() });
+    link(b.id, row);
+  }
+  function walkinFrom(row) {
+    const w = NM.walkinFromRow(row, D.towns, S.prefs.visitTown); const t = town(w.town);
+    const id = 'walkin-n' + sid(row.id).slice(0, 10);
+    const b = { id, name: w.name, town: t.id, cat: (D.cats[0] || {}).id ?? 0, type: 'From Notion', addr: '', web: '', need: '', offers: '', why: '', la: t.la, lo: t.lo, approx: true, added: todayISO(), fromNotion: true, townGuessed: w.townGuessed, metAt: row.metAt };
+    S.myBiz.push(b); rebuild(); return BY[id];
+  }
+
+  async function run() {
+    if (!on()) { setState('off'); return; }
+    if (busy) { again = true; return; }
+    if (navigator.onLine === false) { setState('waiting'); return; }
+    busy = true; setState('syncing'); let changed = false, made = 0, pulled = 0, added = 0;
+    try {
+      const remote = await pullAll();
+      const byId = new Map(remote.map(r => [sid(r.id), r])); const seen = new Set((S.syncIgnore || []).map(sid));
+      const ops = [];
+      // 1. records already linked to a Notion row
+      for (const b of BIZ) {
+        const p = S.people[b.id]; if (!p || !p.nid) continue;
+        const r = byId.get(sid(p.nid));
+        if (!r) { // deleted or archived in Notion: keep the local notes, stop syncing until edited again
+          const q = Object.assign({}, p); delete q.nid; delete q.nHash; q.nGoneAt = Date.now(); S.people[b.id] = q; changed = true; continue; }
+        seen.add(sid(r.id));
+        const lh = NM.rowHash(rowFor(b)), rh = NM.rowHash(r);
+        if (lh === rh) { if (p.nHash !== rh) { link(b.id, r); changed = true; } continue; }
+        const act = NM.decide({ localDirty: lh !== p.nHash, remoteChanged: rh !== p.nHash, localUpdated: p.updated, remoteEdited: r.lastEdited });
+        if (act === 'pull') { applyRemote(b, r); pulled++; changed = true; if (NM.rowHash(rowFor(b)) !== rh) ops.push(b.id); }
+        else if (act === 'push') ops.push(b.id);
+      }
+      // 2. Notion rows the app hasn't linked yet: match to a business by "Met at", else a new walk-in
+      for (const r of remote) {
+        if (seen.has(sid(r.id)) || NM.isBlankRow(r)) continue;
+        const free = BIZ.filter(x => !(S.people[x.id] || {}).nid);
+        const b = NM.matchBiz(r, free, D.towns);
+        if (b) {
+          const p = S.people[b.id];
+          if (NM.hasData(p) && (p.updated || 0) > (Date.parse(r.lastEdited) || 0)) { link(b.id, r); ops.push(b.id); }
+          else { applyRemote(b, r); pulled++; if (NM.rowHash(rowFor(b)) !== NM.rowHash(r)) ops.push(b.id); }
+        } else { const w = walkinFrom(r); applyRemote(w, r); added++; if (NM.rowHash(rowFor(w)) !== NM.rowHash(r)) ops.push(w.id); }
+        seen.add(sid(r.id)); changed = true;
+      }
+      // 3. people with something recorded here but no Notion row yet
+      for (const b of BIZ) { const p = S.people[b.id]; if (p && !p.nid && NM.hasData(p) && !(p.nGoneAt && (p.updated || 0) <= p.nGoneAt) && !ops.includes(b.id)) ops.push(b.id); }
+      if (changed) { save(); rebuild(); afterChange(); }
+      // push, one at a time
+      for (const id of ops) {
+        const b = BY[id]; if (!b) continue; const p = P(id); const row = rowFor(b);
+        const res = p.nid ? await api('PATCH', '/people/' + encodeURIComponent(p.nid), row) : await api('POST', '/people', row);
+        link(id, res); save(); made++; await gap();
+      }
+      cfg.last = Date.now(); saveCfg(); retryMs = 0;
+      setState('ok', [made && `${made} sent`, pulled && `${pulled} updated from Notion`, added && `${added} new from Notion`].filter(Boolean).join(' · '));
+      if (focusId && (pulled || added) && $('#sheet').classList.contains('open') && !document.activeElement?.closest?.('#sheet')) openCard(focusId);
+      if (pulled || added) toast(`Notion: ${[pulled && `${pulled} updated`, added && `${added} new walk-in${added === 1 ? '' : 's'}`].filter(Boolean).join(', ')}`);
+    } catch (e) {
+      if (e.offline) { setState('waiting'); retryLater(); }
+      else if (e.status === 401) setState('error', 'Wrong passphrase. Open Notion sync to fix it.');
+      else if (e.status === 403) setState('error', 'This site address is not allowed by the sync service.');
+      else if (e.status === 410 || e.status === 404) setState('error', 'A Notion row was deleted; trying again.'), retryLater(5000);
+      else { setState('error', e.message); retryLater(e.retryAfter ? e.retryAfter * 1000 : 0); }
+    } finally {
+      busy = false; if (again) { again = false; schedule(1500); }
+    }
+  }
+  function retryLater(ms) { retryMs = ms || Math.min(5 * 60e3, retryMs ? retryMs * 2 : 30e3); clearTimeout(timer); timer = setTimeout(run, retryMs); }
+  function schedule(ms = 4000) { if (!on()) return; setState(state === 'off' ? 'ok' : state); clearTimeout(timer); timer = setTimeout(run, ms); }
+
+  function dialog() {
+    openDialog(`<h2>Notion sync</h2>
+      <p>Keeps the people you meet in step with your Notion database <b>People I've Met</b>. Name, where you met, their contact and your notes go both ways; the first line of Notes carries the status and visit dates, like <i>Status: Got contact · Next visit: 2026-12-01</i>.</p>
+      <p class="small muted">Introductions, the visit log and your walking routes stay on this device. Rows you add in Notion that don't match a business here arrive as new walk-ins. If the same person is edited in both places, the newer edit wins.</p>
+      <label class="field">Passphrase (once per device)<input class="inp" name="key" type="password" autocomplete="current-password" value="${esc(cfg.key || '')}" placeholder="the sync passphrase"></label>
+      <details class="acc"><summary>Advanced</summary><label class="field" style="margin-top:8px">Sync service address<input class="inp" name="url" type="url" value="${esc(cfg.url || DEF)}" placeholder="https://heirloom-atlas-sync.….workers.dev" autocomplete="off"></label></details>
+      <p class="small" id="sync-status">${statusLine()}</p>
+      <div class="acts">${on() ? `<button class="btn ghost" type="button" id="s-off">Turn off on this device</button><button class="btn" type="button" id="s-now">Sync now</button>` : ''}<button class="btn" value="cancel" formnovalidate>Close</button><button class="btn primary" value="ok">${on() ? 'Save' : 'Turn on'}</button></div>`, fd => {
+      const key = String(fd.get('key') || '').trim(), u = String(fd.get('url') || '').trim();
+      if (!key) { toast('Enter the passphrase'); return false; }
+      if (!u) { toast('The sync service address is missing (Advanced)'); return false; }
+      if (!/^https:\/\//.test(u)) { toast('The address must start with https://'); return false; }
+      cfg.key = key; cfg.url = u === DEF ? '' : u; cfg.off = false; saveCfg(); toast('Notion sync on'); run();
+    });
+    const off = $('#s-off'); if (off) off.onclick = () => { cfg = { url: cfg.url }; saveCfg(); clearTimeout(timer); setState('off'); $('#dlg').close(); toast('Notion sync off on this device. Your Notion rows are untouched.'); };
+    const now = $('#s-now'); if (now) now.onclick = () => run();
+  }
+
+  function init() {
+    if (!NM) return;
+    window.addEventListener('online', () => schedule(500));
+    window.addEventListener('offline', () => on() && setState('waiting'));
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && on() && Date.now() - (cfg.last || 0) > 120e3) schedule(300); });
+    setInterval(() => { if (on() && document.visibilityState === 'visible' && !busy) run(); }, 10 * 60e3);
+    if (on()) { setState('ok'); run(); } else setState('off');
+  }
+  return { init, run, schedule, dialog, on, pending, _state: () => state };
+})();
+window.__sync = Sync;
 boot();
 })();
