@@ -15,7 +15,8 @@ const results = {}, errs = []; const ok = (k, v) => { results[k] = v; if (v !== 
 const w = ms => new Promise(r => setTimeout(r, ms));
 const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox'] });
 const p = await b.newPage(); p.on('pageerror', e => errs.push('pageerror ' + e.message)); p.on('dialog', d => d.accept());
-const sync = async () => { await p.evaluate(() => window.__sync.run()); await w(300); for (let i = 0; i < 1800 && (await p.evaluate(() => window.__sync._state())) === 'syncing'; i++) await w(100); };
+// waits for the run it starts and for any follow-up run the app queues when a change lands mid-sync
+const sync = async () => { await p.evaluate(() => window.__sync.run()); for (let round = 0; round < 3; round++) { await w(300); for (let i = 0; i < 1800 && (await p.evaluate(() => window.__sync._state())) === 'syncing'; i++) await w(100); await w(1900); if ((await p.evaluate(() => window.__sync._state())) !== 'syncing') break; } };
 const shared = (await n('GET', `/data_sources/${DS('BIZ_DS')}`)).status === 200;
 try {
   await p.setViewport({ width: 1280, height: 860 });
@@ -39,6 +40,13 @@ try {
   const wid = await p.evaluate(t => Object.keys(window.__test.BY()).find(k => window.__test.BY()[k].name === t), TEST);
   const pp = await p.evaluate(id => JSON.parse(localStorage.getItem('heirloom-atlas/v1')).people[id], wid);
   ok('people: Notion -> app', pp.notes === 'Edited in Notion (test)' && pp.stage === 2);
+  // people clean-up through the app's own delete (moves the row to Notion's Trash)
+  await p.evaluate(id => { location.hash = '#people/' + id; }, wid); await p.reload({ waitUntil: 'load' }); await p.waitForFunction('window.__ready'); await w(1200);
+  await p.evaluate(() => document.querySelector('#btn-edit').click()); await w(300);
+  if (!(await p.$('#n-clear'))) await p.evaluate(id => window.__test && document.querySelector(`[data-open="${id}"]`)?.click(), wid);
+  await p.click('#n-clear'); await w(500); await sync();
+  ok('people: delete in app -> Notion Trash', (await n('GET', `/pages/${pid}`)).j.in_trash === true);
+  rows = await findIn(PEOPLE, 'Met at', TEST); ok('no test rows left in People I\'ve Met', rows.length === 0);
   // 3. collections (only once the three databases are shared with the integration)
   if (shared) {
     let br = await findIn(DS('BIZ_DS'), 'App ID', wid);
@@ -66,13 +74,6 @@ try {
       for (const x of r) await n('PATCH', `/pages/${x.id}`, { in_trash: true });
     }
   }
-  // people clean-up through the app's own delete (moves the row to Notion's Trash)
-  await p.evaluate(id => { location.hash = '#people/' + id; }, wid); await p.reload({ waitUntil: 'load' }); await p.waitForFunction('window.__ready'); await w(1200);
-  await p.evaluate(() => document.querySelector('#btn-edit').click()); await w(300);
-  if (!(await p.$('#n-clear'))) await p.evaluate(id => window.__test && document.querySelector(`[data-open="${id}"]`)?.click(), wid);
-  await p.click('#n-clear'); await w(500); await sync();
-  ok('people: delete in app -> Notion Trash', (await n('GET', `/pages/${pid}`)).j.in_trash === true);
-  rows = await findIn(PEOPLE, 'Met at', TEST); ok('no test rows left in People I\'ve Met', rows.length === 0);
 } catch (e) { errs.push('crash ' + (e.stack || e)); }
 console.log(JSON.stringify({ shared, results, errs }, null, 1));
 await p.evaluate(() => localStorage.clear()).catch(() => {});
