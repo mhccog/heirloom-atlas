@@ -1,5 +1,5 @@
-const V = 'heirloom-v1';
-const SHELL = ['./', 'index.html', 'assets/styles.css', 'assets/app.js', 'assets/data.json', 'vendor/force-graph.min.js', 'vendor/maplibre-gl.js', 'vendor/maplibre-gl.css', 'fonts/fraunces-latin-wght-normal.woff2', 'fonts/fraunces-latin-wght-italic.woff2', 'fonts/inter-latin-wght-normal.woff2', 'favicon.svg', 'icon-192.png'];
+const V = 'heirloom-v2';
+const SHELL = ['./', 'index.html', 'assets/styles.css', 'assets/app.js', 'assets/notion-map.js', 'assets/sync-config.js', 'assets/data.json', 'vendor/force-graph.min.js', 'vendor/maplibre-gl.js', 'vendor/maplibre-gl.css', 'fonts/fraunces-latin-wght-normal.woff2', 'fonts/fraunces-latin-wght-italic.woff2', 'fonts/inter-latin-wght-normal.woff2', 'favicon.svg', 'icon-192.png'];
 const TILES = 'heirloom-tiles-v1', MAX_TILES = 800;
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V && k !== TILES).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
@@ -8,7 +8,7 @@ self.addEventListener('fetch', e => {
   const u = new URL(e.request.url); if (e.request.method !== 'GET') return;
   if (u.origin === location.origin) {
     // network first for data and html so updates arrive; cache first for the rest
-    const fresh = /data\.json$|\/$|index\.html$|app\.js$|styles\.css$/.test(u.pathname);
+    const fresh = /data\.json$|\/$|index\.html$|app\.js$|notion-map\.js$|sync-config\.js$|styles\.css$/.test(u.pathname);
     e.respondWith(fresh
       ? fetch(e.request).then(r => { const cp = r.clone(); caches.open(V).then(c => c.put(e.request, cp)); return r; }).catch(() => caches.match(e.request, { ignoreSearch: true }))
       : caches.match(e.request, { ignoreSearch: true }).then(r => r || fetch(e.request)));

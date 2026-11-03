@@ -31,6 +31,7 @@
   <div class="top-actions">
     <button class="btn ghost" id="btn-add" type="button" aria-label="Add a walk-in"><span aria-hidden="true">＋</span> <span class="hide-sm">Walk-in</span><span class="show-sm">Add</span></button>
     <button class="btn ghost" id="btn-data" type="button" aria-label="Your data: export and import"><span class="hide-sm">Your data</span><span class="show-sm">Data</span></button>
+    <button class="btn ghost sync-btn" id="btn-sync" type="button" data-state="off" aria-label="Notion sync" title="Notion sync"><i class="sync-dot" aria-hidden="true"></i><span class="hide-sm">Notion</span></button>
     <button class="btn ghost icon" id="btn-about" type="button" aria-label="About and sources">i</button>
   </div>
 </header>
@@ -104,6 +105,8 @@
   </symbol>
 </svg>
 <script src="vendor/force-graph.min.js" defer></script>
+<script src="assets/sync-config.js" defer></script>
+<script src="assets/notion-map.js" defer></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>
