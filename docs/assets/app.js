@@ -981,14 +981,21 @@ const Sync = (() => {
       idOfNid: (c, nid) => { if (!nid) return ''; const k = sid(nid); for (const [id, e] of Object.entries(S.ed[c])) if (e.nid && sid(e.nid) === k) return id; return ''; } };
   }
   async function pullColl(ep) {
-    const out = []; let cursor = null;
-    for (let i = 0; i < 50; i++) { const r = await api('GET', `/c/${ep}?limit=100` + (cursor ? '&cursor=' + encodeURIComponent(cursor) : '')); out.push(...r.results); if (!r.has_more || !r.next_cursor) break; cursor = r.next_cursor; }
-    return out;
+    const out = []; let cursor = null; let db = '';
+    for (let i = 0; i < 50; i++) { const r = await api('GET', `/c/${ep}?limit=100` + (cursor ? '&cursor=' + encodeURIComponent(cursor) : '')); out.push(...r.results); db = r.db || db; if (!r.has_more || !r.next_cursor) break; cursor = r.next_cursor; }
+    out.db = db; return out;
   }
   // One collection, record by record. Newest edit wins; deletes are Archived ticks in Notion; offline changes just stay "dirty" until next time.
   async function syncColl(coll, cs) {
     const ep = C.ENDPOINT[coll]; const ED = S.ed[coll];
     const remote = await pullColl(ep);
+    // the rows moved to a different Notion database: forget the old row links and match again by App ID
+    S.collDb = S.collDb || {};
+    if (remote.db && S.collDb[coll] !== remote.db) {
+      if (S.collDb[coll]) for (const id of Object.keys(ED)) { const e = ED[id] = Object.assign({}, ED[id]); delete e.nid; delete e.nHash; delete e.syncedAt; if (e.del) e.delSynced = false; }
+      else for (const id of Object.keys(ED)) if (ED[id].nid && !remote.some(r => sid(r.id) === sid(ED[id].nid))) { const e = ED[id] = Object.assign({}, ED[id]); delete e.nid; delete e.nHash; delete e.syncedAt; if (e.del) e.delSynced = false; }
+      S.collDb[coll] = remote.db; save();
+    }
     const byNid = new Map(remote.map(r => [sid(r.id), r])); const byApp = new Map();
     for (const r of remote) if (r.appId && !byApp.has(r.appId)) byApp.set(r.appId, r);
     const empty = remote.length === 0; const used = new Set(); const ops = []; let changed = false;

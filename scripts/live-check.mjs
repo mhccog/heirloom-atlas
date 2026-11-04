@@ -17,7 +17,7 @@ const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', hea
 const p = await b.newPage(); p.on('pageerror', e => errs.push('pageerror ' + e.message)); p.on('dialog', d => d.accept());
 // waits for the run it starts and for any follow-up run the app queues when a change lands mid-sync
 const sync = async () => { await p.evaluate(() => window.__sync.run()); for (let round = 0; round < 3; round++) { await w(300); for (let i = 0; i < 1800 && (await p.evaluate(() => window.__sync._state())) === 'syncing'; i++) await w(100); await w(1900); if ((await p.evaluate(() => window.__sync._state())) !== 'syncing') break; } };
-const shared = (await n('GET', `/data_sources/${DS('BIZ_DS')}`)).status === 200;
+const shared = (await n('GET', `/data_sources/${DS('ATLAS_DS')}`)).status === 200;
 try {
   await p.setViewport({ width: 1280, height: 860 });
   await p.goto(SITE, { waitUntil: 'load' }); await p.waitForFunction('window.__ready');
@@ -49,28 +49,28 @@ try {
   rows = await findIn(PEOPLE, 'Met at', TEST); ok('no test rows left in People I\'ve Met', rows.length === 0);
   // 3. collections (only once the three databases are shared with the integration)
   if (shared) {
-    let br = await findIn(DS('BIZ_DS'), 'App ID', wid);
+    let br = await findIn(DS('ATLAS_DS'), 'App ID', wid);
     ok('business: app -> Notion', !!br && br.length === 1 && plain(br[0].properties.Name) === TEST);
     await p.evaluate(id => { window.__test.editRec('biz', id, { need: 'Edited in the app (test)' }); window.__test.commit(); }, wid); await sync();
-    br = await findIn(DS('BIZ_DS'), 'App ID', wid); ok('business edit: app -> Notion', plain(br[0].properties['Their need']) === 'Edited in the app (test)');
-    await w(61e3); await n('PATCH', `/pages/${br[0].id}`, { properties: { 'What they do': { rich_text: [{ text: { content: 'Edited in Notion (test)' } }] } } }); await sync();
+    br = await findIn(DS('ATLAS_DS'), 'App ID', wid); ok('business edit: app -> Notion', /^Their need: Edited in the app \(test\)$/m.test(plain(br[0].properties.Details)) && br[0].properties.Type.select.name === 'Business');
+    await w(61e3); await n('PATCH', `/pages/${br[0].id}`, { properties: { Details: { rich_text: [{ text: { content: plain(br[0].properties.Details).replace(/^What they do: .*$/m, 'What they do: Edited in Notion (test)') } }] } } }); await sync();
     ok('business: Notion -> app', await p.evaluate(id => window.__test.BY()[id].type, wid) === 'Edited in Notion (test)');
     // intro between the test business and a real one
     await p.evaluate(id => { window.__test.addRec('intro', { id: 'my-synctest-' + Date.now().toString(36), a: id, b: 'gorringe-s', why: 'Sync test (delete me)', state: 'open', at: '', kind: 'Yours', strength: 2, km: 0, mine: true, outcome: '', outcomeNote: '' }); window.__test.commit(); }, wid); await sync();
-    let ir = await findIn(DS('INTRO_DS'), 'Why', 'Sync test (delete me)'); ok('intro: app -> Notion (with relations)', ir.length === 1 && ir[0].properties.From.relation.length === 1 && ir[0].properties.To.relation.length === 1);
+    let ir = await findIn(DS('ATLAS_DS'), 'Why', 'Sync test (delete me)'); ok('intro: app -> Notion (with relations)', ir.length === 1 && ir[0].properties.From.relation.length === 1 && ir[0].properties.To.relation.length === 1 && ir[0].properties.Type.select.name === 'Introduction');
     const iid = plain(ir[0].properties['App ID']);
     await w(61e3); await n('PATCH', `/pages/${ir[0].id}`, { properties: { Status: { select: { name: 'Made' } }, Outcome: { select: { name: 'Replied' } } } }); await sync();
     ok('intro: Notion -> app', await p.evaluate(id => { const i = window.__test.D().intros.find(x => x.id === id); return i && i.state === 'made' && i.outcome === 'Replied'; }, iid));
     // list item
     await p.evaluate(() => { window.__test.addRec('list', { id: 'event:synctest-' + Date.now().toString(36), kind: 'event', order: 999, name: 'Sync test event (delete me)', date: '2026-12-31', end: '', label: 'Thu 31 Dec', town: 'lewes', at: '', why: 'test' }); window.__test.commit(); }); await sync();
-    let lr = await findIn(DS('NOTE_DS'), 'Name', 'Sync test event'); ok('list: app -> Notion', lr.length === 1 && /Date: 2026-12-31/.test(plain(lr[0].properties.Details)));
+    let lr = await findIn(DS('ATLAS_DS'), 'Name', 'Sync test event'); ok('list: app -> Notion', lr.length === 1 && /Date: 2026-12-31/.test(plain(lr[0].properties.Details)) && lr[0].properties.Type.select.name === 'Event');
     await w(61e3); await n('PATCH', `/pages/${lr[0].id}`, { properties: { Details: { rich_text: [{ text: { content: plain(lr[0].properties.Details).replace('Why go: test', 'Why go: edited in Notion') } }] } } }); await sync();
     ok('list: Notion -> app', await p.evaluate(() => window.__test.D().events.some(e => e.what.startsWith('Sync test event') && e.why === 'edited in Notion')));
     // clean up: delete in the app (ticks Archived), then trash the test rows
     const eid = plain(lr[0].properties['App ID']);
     await p.evaluate((a, b, c) => { window.__test.delRec('list', c); window.__test.delRec('intro', b); window.__test.delRec('biz', a); window.__test.commit(); }, wid, iid, eid); await sync();
-    for (const [ds, prop, v] of [[DS('BIZ_DS'), 'App ID', wid], [DS('INTRO_DS'), 'App ID', iid], [DS('NOTE_DS'), 'App ID', eid]]) {
-      const r = await findIn(ds, prop, v); ok('delete in app ticks Archived: ' + prop + ' ' + ds.slice(0, 4), r.length === 1 && r[0].properties.Archived.checkbox === true);
+    for (const [ds, prop, v] of [[DS('ATLAS_DS'), 'App ID', wid], [DS('ATLAS_DS'), 'App ID', iid], [DS('ATLAS_DS'), 'App ID', eid]]) {
+      const r = await findIn(ds, prop, v); ok('delete in app ticks Archived: ' + v, r.length === 1 && r[0].properties.Archived.checkbox === true);
       for (const x of r) await n('PATCH', `/pages/${x.id}`, { in_trash: true });
     }
   }
