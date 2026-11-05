@@ -1,4 +1,4 @@
-const V = 'heirloom-v5';
+const V = 'heirloom-v6';
 const SHELL = ['./', 'index.html', 'assets/styles.css', 'assets/app.js', 'assets/notion-map.js', 'assets/content.js', 'assets/icons.svg', 'assets/sync-config.js', 'assets/data.json', 'vendor/force-graph.min.js', 'vendor/maplibre-gl.js', 'vendor/maplibre-gl.css', 'fonts/newsreader-latin-wght-normal.woff2', 'fonts/newsreader-latin-wght-italic.woff2', 'fonts/source-sans-3-latin-wght-normal.woff2', 'fonts/ibm-plex-mono-latin-400-normal.woff2', 'fonts/ibm-plex-mono-latin-500-normal.woff2', 'favicon.svg', 'icon-192.png'];
 const TILES = 'heirloom-tiles-v1', MAX_TILES = 800;
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });

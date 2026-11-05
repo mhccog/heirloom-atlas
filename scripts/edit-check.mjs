@@ -39,7 +39,7 @@ await p.click('[data-eb=lists]'); await w(300); out.listsKinds = await p.$$eval(
 await p.click('#sheet-close'); await w(200);
 // delete a business with confirm, then undo
 p.on('dialog', d => d.accept());
-await p.click('[data-tab=people]'); await w(200); await p.click('[data-open="shipton-mill"]'); await w(300); await p.click('#n-del'); await w(400);
+await p.click('[data-tab=people]'); await w(200); await p.click('[data-open="shipton-mill"]'); await w(300); await p.click('#n-del'); await w(300); await p.click('#confirm-dlg [data-cf=yes]'); await w(400);
 out.deleted = await p.evaluate(() => !document.querySelector('[data-open="shipton-mill"]'));
 await p.click('[data-eb=undo]'); await w(300); out.restored = await p.evaluate(() => !!document.querySelector('[data-open="shipton-mill"]'));
 await p.click('[data-eb=done]'); await w(200); out.barGone = await p.$eval('#editbar', e => e.hidden);

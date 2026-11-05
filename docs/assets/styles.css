@@ -357,3 +357,12 @@ ul.plain li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;bo
 @keyframes syncpulse{50%{opacity:.35}}
 @media (max-width:720px){.top-actions .sync-btn{width:36px;padding:0}}
 @media (prefers-reduced-motion:reduce){.sync-dot{animation:none!important}}
+/* delete confirmation */
+dialog.confirm{width:min(400px,calc(100vw - 32px))}
+dialog.confirm .dlg{padding:20px 22px 18px}
+dialog.confirm .cf-k{font:500 11px/1 var(--mono, "IBM Plex Mono", monospace);letter-spacing:.12em;text-transform:uppercase;color:var(--accent,#7a2e22);margin:0 0 10px}
+dialog.confirm h3{font-family:var(--serif, Newsreader, serif);font-weight:500;font-size:21px;line-height:1.25;margin:0 0 8px}
+dialog.confirm p#cf-body{margin:0 0 18px;font-size:14px;line-height:1.45}
+dialog.confirm .acts{display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--rule, rgba(31,27,22,.15));padding-top:14px}
+dialog.confirm .btn.primary.warn{background:var(--accent,#7a2e22);border-color:var(--accent,#7a2e22);color:#fbf8f1}
+dialog.confirm .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}

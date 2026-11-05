@@ -90,6 +90,20 @@ const newId = (prefix, name) => prefix + '-' + (C.slug(name).slice(0, 24) || 'it
 const partners = id => INTROS.filter(i => (i.a === id || i.b === id) && introState(i) !== 'declined').map(i => ({ intro: i, other: BY[i.a === id ? i.b : i.a] }));
 
 /* ---------------- toast ---------------- */
+// Every delete asks first. A small modal: names the item, Cancel (focused) and Delete. Esc or Cancel keeps it; Enter presses the focused button.
+function askDelete({ title, body = '', ok = 'Delete' }) {
+  return new Promise(resolve => {
+    let d = $('#confirm-dlg');
+    if (!d) { d = document.createElement('dialog'); d.id = 'confirm-dlg'; d.className = 'confirm'; d.setAttribute('aria-labelledby', 'cf-title'); d.setAttribute('aria-describedby', 'cf-body'); document.body.appendChild(d); }
+    d.innerHTML = `<div class="dlg"><p class="cf-k">Confirm</p><h3 id="cf-title">${esc(title)}</h3>${body ? `<p id="cf-body" class="muted">${esc(body)}</p>` : '<p id="cf-body" hidden></p>'}
+      <div class="acts"><button class="btn" type="button" data-cf="no">Cancel</button><button class="btn primary warn" type="button" data-cf="yes">${esc(ok)}</button></div></div>`;
+    let done = false; const finish = v => { if (done) return; done = true; if (d.open) d.close(); resolve(v); };
+    d.onclick = e => { const b = e.target.closest('[data-cf]'); if (b) finish(b.dataset.cf === 'yes'); else if (e.target === d) finish(false); };
+    d.oncancel = e => { e.preventDefault(); finish(false); };
+    d.onkeydown = e => { if (e.key === 'Escape') { e.preventDefault(); finish(false); } else if (e.key === 'Enter') { const b = document.activeElement && document.activeElement.closest && document.activeElement.closest('[data-cf]'); e.preventDefault(); finish(!!b && b.dataset.cf === 'yes'); } };
+    d.showModal(); $('[data-cf="no"]', d).focus();
+  });
+}
 let tt; function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2600); }
 
 /* ---------------- filters ---------------- */
@@ -388,18 +402,18 @@ function wireCard(id) {
   $('#n-today', body).onclick = () => { logVisit(id); openCard(id); toast('Visit logged for today'); };
   $$('[data-plus]', body).forEach(b => b.onclick = () => { setP(id, { next: addDays(P(id).last || todayISO(), +b.dataset.plus) }); renderDash(); openCard(id); toast('Next visit set'); });
   const ics = $('#n-ics', body); if (ics) ics.onclick = () => downloadICS(id);
-  const rs = $('#n-reset', body); if (rs) rs.onclick = () => { resetRec('biz', id); commit('Back to the research version'); openCard(id); };
+  const rs = $('#n-reset', body); if (rs) rs.onclick = async () => { if (!await askDelete({ title: `Discard your edits to ${BY[id].name}?`, body: 'It goes back to the research version. You can undo this.', ok: 'Discard' })) return; resetRec('biz', id); commit('Back to the research version'); openCard(id); };
   const cl = $('#n-clear', body); if (cl) cl.onclick = () => deletePerson(id);
-  const del = $('#n-del', body); if (del) del.onclick = () => {
+  const del = $('#n-del', body); if (del) del.onclick = async () => {
     const n = INTROS.filter(i => i.a === id || i.b === id).length;
-    if (!confirm(`Delete ${BY[id].name}?${n ? ` Its ${n} introduction${n === 1 ? '' : 's'} will be hidden too.` : ''} In Notion the row is ticked Archived, not removed. You can undo this.`)) return;
+    if (!await askDelete({ title: `Delete ${BY[id].name}?`, body: `${n ? `Its ${n} introduction${n === 1 ? '' : 's'} will be hidden too. ` : ''}In Notion the row is ticked Archived, not removed. You can undo this.` })) return;
     delRec('biz', id, 'delete ' + BY[id].name); closeCard(); commit('Deleted. Undo is in the edit bar.');
   };
 }
 // Clears what you've recorded about a person here, and moves their row in People I've Met to Notion's Trash (restorable there).
-function deletePerson(id) {
+async function deletePerson(id) {
   const p = P(id); const b = BY[id];
-  if (!confirm(`Delete your notes, status and contact for ${b.name}?${p.nid ? ' Their row in Notion “People I\'ve Met” goes to Notion\'s Trash, where you can restore it.' : ''}`)) return;
+  if (!await askDelete({ title: `Delete your notes on ${b.name}?`, body: `Your notes, status and contact go.${p.nid ? ' Their row in Notion “People I\'ve Met” goes to Notion\'s Trash, where you can restore it.' : ''}` })) return;
   if (p.nid) { S.peopleTrash = (S.peopleTrash || []).concat(p.nid); S.syncIgnore = (S.syncIgnore || []).concat(p.nid); }
   S.people[id] = { stage: 0, notes: '', met: '', contact: '', last: '', next: '', log: [], nGoneAt: Date.now() };
   save(); afterChange(); openCard(id); Sync.schedule(500); toast('Notes deleted');
@@ -476,8 +490,9 @@ function renderIntros() {
   $('#if-town').onchange = e => { introTown = e.target.value; renderIntros(); };
   $('#add-intro').onclick = () => introDialog();
   const more = $('#intro-more'); if (more) more.onclick = () => { introAll = true; renderIntros(); };
-  $$('[data-outcome]', el).forEach(x => x.onchange = () => {
-    const id = x.dataset.outcome; const v = x.value; editRec('intro', id, { outcome: v }, 'outcome');
+  $$('[data-outcome]', el).forEach(x => x.onchange = async () => {
+    const id = x.dataset.outcome; const v = x.value; const was = (INTROS.find(i => i.id === id) || {}).outcome || '';
+    if (!v && was) { const i = INTROS.find(y => y.id === id); if (!await askDelete({ title: `Clear the outcome “${was}”?`, body: i ? `${(BY[i.a] || {}).name || ''} and ${(BY[i.b] || {}).name || ''}` : '', ok: 'Clear' })) { x.value = was; return; } } editRec('intro', id, { outcome: v }, 'outcome');
     commit(v ? `Logged: ${OUT_SHORT[v]}` : 'Cleared');
     if (v && v !== 'No reply yet') setTimeout(() => { const note = prompt('A line on what happened? (optional)', (INTROS.find(i => i.id === id) || {}).outcomeNote || ''); if (note != null) { editRec('intro', id, { outcomeNote: note.trim() }, 'outcome note'); commit(); } }, 30);
   });
@@ -719,11 +734,11 @@ function dataDialog() {
   $('#d-file').onchange = async e => {
     const f = e.target.files[0]; if (!f) return;
     try { const j = JSON.parse(await f.text()); const st = j.state || j; if (st.v !== 1 || typeof st.people !== 'object') throw 0;
-      if (!confirm('Replace what is on this device with this backup?')) return;
+      if (!await askDelete({ title: 'Replace everything on this device with this backup?', body: 'What is here now is overwritten.', ok: 'Replace' })) { e.target.value = ''; return; }
       S = migrate(Object.assign(blank(), st)); save(); rebuild(); if (graph) syncGraphData(true); afterChange(); $('#dlg').close(); toast('Backup restored');
     } catch (err) { toast("That file isn't a Heirloom Atlas backup"); }
   };
-  $('#d-reset').onclick = () => { if (!confirm(`Erase all your statuses, notes, walk-ins and introductions on this device? Save a backup first if unsure.${Sync.on() ? ' Your Notion rows are not deleted, and will sync back in next time.' : ''}`)) return; S = blank(); save(); rebuild(); if (graph) syncGraphData(true); afterChange(); $('#dlg').close(); toast('Erased'); };
+  $('#d-reset').onclick = async () => { if (!await askDelete({ title: 'Erase this device?', body: `All your statuses, notes, walk-ins and introductions here go. Save a backup first if unsure.${Sync.on() ? ' Your Notion rows are not deleted, and will sync back in next time.' : ''}`, ok: 'Erase' })) return; S = blank(); save(); rebuild(); if (graph) syncGraphData(true); afterChange(); $('#dlg').close(); toast('Erased'); };
 }
 function aboutDialog() {
   openDialog(`<h2>About this atlas</h2>
@@ -824,11 +839,12 @@ function mountForm(host, coll, id, opts = {}) {
     }
     commit(id ? 'Saved' : 'Added'); done();
   };
-  host.addEventListener('click', e => {
+  const label = () => coll === 'intro' ? `the introduction ${(BY[rec.a] || {}).name || ''} and ${(BY[rec.b] || {}).name || ''}` : `“${rec.name || rec.what || rec.label || rec.text || 'this item'}”`;
+  host.addEventListener('click', async e => {
     const b = e.target.closest('[data-fa]'); if (!b) return; const a = b.dataset.fa;
     if (a === 'cancel') return done();
-    if (a === 'reset') { resetRec(coll, id); commit('Back to the research version'); return done(); }
-    if (a === 'del') { if (!confirm('Delete this? In Notion it is ticked Archived, not removed. You can undo.')) return; delRec(coll, id, 'delete ' + (rec.name || 'introduction')); commit('Deleted. Undo is in the edit bar.'); return done(); }
+    if (a === 'reset') { if (!await askDelete({ title: `Discard your edits to ${label()}?`, body: 'It goes back to the research version. You can undo this.', ok: 'Discard' })) return; resetRec(coll, id); commit('Back to the research version'); return done(); }
+    if (a === 'del') { if (!await askDelete({ title: `Delete ${label()}?`, body: 'In Notion it is ticked Archived, not removed. You can undo this.' })) return; delRec(coll, id, 'delete ' + (rec.name || 'introduction')); commit('Deleted. Undo is in the edit bar.'); return done(); }
   });
 }
 function rerender() { if ($('#sheet').classList.contains('open') && $('#sheet-body').dataset.mode === 'lists') openLists(); if (tab === 'visits') renderVisits(); if (tab === 'intros') renderIntros(); }
