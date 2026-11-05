@@ -1,0 +1,66 @@
+import puppeteer from 'puppeteer-core';
+const BASE = process.argv[2] || 'http://localhost:8765/';
+const OUT = process.argv[3] || '/workspace/heirloom-atlas-app/shots';
+import fs from 'fs'; fs.mkdirSync(OUT, { recursive: true });
+const browser = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const errors = [];
+async function page(vp, mobile) {
+  const p = await browser.newPage(); await p.setViewport(vp); if (mobile) await p.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1');
+  p.on('console', m => { if (m.type() === 'error') errors.push((mobile ? '[m] ' : '[d] ') + m.text()); });
+  p.on('pageerror', e => errors.push('pageerror ' + e.message));
+  p.on('requestfailed', r => errors.push('reqfail ' + r.url() + ' ' + (r.failure() || {}).errorText));
+  return p;
+}
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const d = await page({ width: 1440, height: 900, deviceScaleFactor: 1 });
+await d.goto(BASE, { waitUntil: 'networkidle0' }); await d.waitForFunction('window.__ready'); await wait(2500);
+await d.screenshot({ path: OUT + '/1-connections-graph.png' });
+// open a card via list click path
+await d.evaluate(() => document.querySelector('[data-stage="2"].stat') && 0);
+await d.evaluate(() => { location.hash = ''; });
+await d.click('.seg [data-layout=list]'); await wait(400);
+await d.screenshot({ path: OUT + '/1b-people-list.png' });
+await d.click('[data-open="foxfield-solicitors"]'); await wait(600);
+await d.click('#sheet .pipeline [data-stage="2"]'); await wait(300);
+await d.type('#n-met', 'test person'); await d.evaluate(() => document.querySelector('#n-met').dispatchEvent(new Event('change')));
+await d.evaluate(() => { document.querySelector('#n-met').value=''; document.querySelector('#n-met').dispatchEvent(new Event('change')); });
+await d.evaluate(() => document.querySelector('#sheet-close').click()); await wait(300); await d.click('.seg [data-layout=graph]'); await wait(300);
+await d.goto(BASE + '#people/foxfield-solicitors', { waitUntil: 'networkidle0' }); await d.reload({ waitUntil: 'networkidle0' }); await d.waitForFunction('window.__ready'); await wait(3500);
+await d.screenshot({ path: OUT + '/2-people-card.png' });
+const persisted = await d.evaluate(() => JSON.parse(localStorage.getItem('heirloom-atlas/v1')).people['foxfield-solicitors'].stage);
+await d.reload({ waitUntil: 'networkidle0' }); await d.waitForFunction('window.__ready'); await wait(800);
+const persisted2 = await d.evaluate(() => JSON.parse(localStorage.getItem('heirloom-atlas/v1')).people['foxfield-solicitors'].stage);
+const dashTxt = await d.$eval('#dash', e => e.innerText.replace(/\n/g, ' '));
+await d.evaluate(() => document.querySelector('#sheet-close').click());
+await d.click('[data-tab=intros]'); await wait(400);
+await d.click('[data-mark=made]'); await wait(400);
+await d.click('[data-if=open]'); await wait(300);
+await d.screenshot({ path: OUT + '/3-introductions.png' });
+await d.click('[data-tab=visits]'); await wait(400); await d.click('[data-vt=lewes]'); await wait(300);
+await d.screenshot({ path: OUT + '/4-visit-planner.png', fullPage: false });
+await d.click('[data-tab=where]'); await d.waitForFunction('window.__mapReady', { timeout: 30000 }).catch(() => errors.push('map not ready')); await wait(4000);
+await d.screenshot({ path: OUT + '/5-where-map.png' });
+await d.click('[data-mt=bicester]'); await wait(2500);
+await d.screenshot({ path: OUT + '/5b-where-bicester-approx.png' });
+await d.click('#btn-globe'); await wait(3500);
+await d.screenshot({ path: OUT + '/5c-where-globe.png' });
+// reset test data
+await d.evaluate(() => localStorage.removeItem('heirloom-atlas/v1'));
+// mobile
+const m = await page({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true }, true);
+await m.goto(BASE, { waitUntil: 'networkidle0' }); await m.waitForFunction('window.__ready'); await wait(2500);
+await m.screenshot({ path: OUT + '/6-mobile-graph.png' });
+await m.click('.seg [data-layout=list]'); await wait(300);
+await m.screenshot({ path: OUT + '/6b-mobile-list.png' });
+await m.click('[data-open="gorringe-s"]'); await wait(700);
+await m.screenshot({ path: OUT + '/6c-mobile-card.png' });
+await m.evaluate(() => document.querySelector('#sheet-close').click()); await wait(300);
+await m.click('[data-tab=visits]'); await wait(300); await m.click('#start-today'); await wait(400);
+await m.screenshot({ path: OUT + '/6d-mobile-today.png' });
+await m.click('#t-close'); await m.click('[data-tab=intros]'); await wait(300);
+await m.screenshot({ path: OUT + '/6e-mobile-intros.png' });
+await m.click('[data-tab=where]'); await m.waitForFunction('window.__mapReady', { timeout: 30000 }).catch(() => errors.push('m map not ready')); await wait(3500);
+await m.screenshot({ path: OUT + '/6f-mobile-where.png' });
+await m.evaluate(() => localStorage.removeItem('heirloom-atlas/v1'));
+console.log(JSON.stringify({ persisted, persisted2, dashTxt, errors }, null, 1));
+await browser.close();

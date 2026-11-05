@@ -1,0 +1,11 @@
+name = "heirloom-atlas-sync"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+# Not secret. Secrets NOTION_TOKEN and APP_KEY are set with `wrangler secret put` by ../scripts/deploy-sync.sh.
+[vars]
+DATA_SOURCE_ID = "073f4d29-a404-4ed0-ad5d-70bc7674b385"   # People I've Met
+ALLOWED_ORIGINS = "https://mhccog.github.io"
+NOTION_VERSION = "2026-03-11"
+ATLAS_DS = "8bcbc8b9-5b90-4964-bb3a-937ed1194daf"   # Heirloom Atlas (businesses, introductions, towns & lists; Type column)

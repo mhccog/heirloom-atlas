@@ -1,0 +1,1080 @@
+{
+ "abiz": [
+  {
+   "n": "Hungerford Arcade",
+   "t": "hungerford",
+   "c": 0,
+   "k": "Antiques centre (100+ dealers)",
+   "a": "26–27 High St, RG17 0NF",
+   "w": "https://www.hungerfordarcade.com/",
+   "y": "Companies House: Hungerford Arcade Ltd, incorporated 2002. Both active directors were born in 1957 and 1960, and no younger director is listed. Its 100+ dealers also make it a probate grapevine.",
+   "la": 51.41449,
+   "lo": -1.51602,
+   "p": "01488 683701",
+   "r": 1
+  },
+  {
+   "n": "Below Stairs of Hungerford",
+   "t": "hungerford",
+   "c": 0,
+   "k": "Antiques dealer, 5 showrooms",
+   "a": "103 High St, RG17 0NB",
+   "w": "https://www.belowstairs.co.uk",
+   "y": "Buys good English 19th and early 20th century pieces, so it sees house clearances first.",
+   "la": 51.41421,
+   "lo": -1.51562,
+   "p": "01488 682317"
+  },
+  {
+   "n": "Roger King Antiques",
+   "t": "hungerford",
+   "c": 0,
+   "k": "Georgian & Victorian furniture",
+   "a": "111 High St, RG17 0NB",
+   "w": "https://www.kingantiques.co.uk/",
+   "y": "Over 25 years in this shop. The LLP members were born in 1974 and 1977, so the family has already handed over. Ask how they managed it.",
+   "la": 51.41361,
+   "lo": -1.51562,
+   "p": "01488 682256"
+  },
+  {
+   "n": "Great Grooms Antiques Centre",
+   "t": "hungerford",
+   "c": 0,
+   "k": "Antiques centre",
+   "a": "1 Charnham St, RG17 0EP",
+   "w": "https://www.greatgrooms.co.uk/",
+   "y": "A multi-dealer centre: one hello reaches many dealers who buy from estates.",
+   "la": 51.41818,
+   "lo": -1.51165,
+   "p": "01488 682314"
+  },
+  {
+   "n": "Youll's Antiques",
+   "t": "hungerford",
+   "c": 0,
+   "k": "French & English furniture",
+   "a": "28 Charnham St, RG17 0EJ",
+   "w": "https://www.youllsantiques.co.uk",
+   "y": "Decorative trade with country-house buyers. Good for 'who's clearing a big house' talk.",
+   "la": 51.41862,
+   "lo": -1.51459,
+   "p": "01488 682046"
+  },
+  {
+   "n": "Dickins Hopgood Chidley",
+   "t": "hungerford",
+   "c": 6,
+   "k": "Solicitors (wills & probate)",
+   "a": "The Old School House, 42 High St, RG17 0NF",
+   "w": "https://www.dhc-solicitors.co.uk/contact/",
+   "y": "The local probate desk. Executors ask them who to call for valuations and clearances.",
+   "la": 51.41389,
+   "lo": -1.51602,
+   "p": "01488 683555"
+  },
+  {
+   "n": "Dreweatts",
+   "t": "hungerford",
+   "c": 1,
+   "k": "Auction house (15 min away)",
+   "a": "Donnington Priory, Oxford Rd, Newbury RG14 2JE",
+   "w": "https://www.dreweatts.com/",
+   "y": "Handles single-owner estate collections. Jewellery sale 18 Nov, watches 19 Nov. Meet the specialists at viewing.",
+   "la": 51.41464,
+   "lo": -1.331,
+   "p": "01635 553553"
+  },
+  {
+   "n": "Lorfords Antiques",
+   "t": "tetbury",
+   "c": 0,
+   "k": "Decorative antiques (shop + Babdown hangars)",
+   "a": "30 Long St, GL8 8AQ",
+   "w": "https://www.lorfords.com/",
+   "y": "One of the biggest decorative-antiques businesses in the UK, buying country-house contents.",
+   "la": 51.63807,
+   "lo": -2.16106,
+   "p": "01666 505111"
+  },
+  {
+   "n": "Brownrigg",
+   "t": "tetbury",
+   "c": 0,
+   "k": "Decorative antiques & interiors",
+   "a": "Stamford House, 14 Long St, GL8 8AQ",
+   "w": "https://www.brownrigg-interiors.co.uk",
+   "y": "A CADA/LAPADA member with a warehouse nearby. Buys whole collections.",
+   "la": 51.63747,
+   "lo": -2.16106,
+   "p": "01666 500887"
+  },
+  {
+   "n": "Amy Perry Antiques",
+   "t": "tetbury",
+   "c": 0,
+   "k": "Decorative antiques",
+   "a": "21 Long St, GL8 8AA",
+   "w": "https://www.amyperryantiques.co.uk",
+   "y": "Recently moved to a new shop, and new shops are usually keen to meet people.",
+   "la": 51.63835,
+   "lo": -2.16077,
+   "p": "01666 500354"
+  },
+  {
+   "n": "Bonhams (Tetbury office)",
+   "t": "tetbury",
+   "c": 1,
+   "k": "Auction house regional office",
+   "a": "Eight Bells House, 14 Church St, GL8 8JG",
+   "w": "https://www.bonhams.com/",
+   "y": "Regional offices do probate valuations and win estates for London sales. The key probate connector here.",
+   "la": 51.63615,
+   "lo": -2.16007,
+   "p": "01666 502200"
+  },
+  {
+   "n": "Foxfield Solicitors",
+   "t": "tetbury",
+   "c": 6,
+   "k": "Solicitors (wills, probate, tax)",
+   "a": "5 Long St, GL8 8AA",
+   "w": "https://find-and-update.company-information.service.gov.uk/company/10478015",
+   "y": "A private-client firm on the main street, close to estate executors. Listed as active on Companies House.",
+   "la": 51.63775,
+   "lo": -2.16077
+  },
+  {
+   "n": "Moore Allen & Innocent",
+   "t": "tetbury",
+   "c": 1,
+   "k": "Auctioneers & estate agents",
+   "a": "Cirencester Salerooms, Burford Rd, GL7 5RH",
+   "w": "https://auctions.mooreallen.co.uk/auctions",
+   "y": "A combined saleroom and estate agency: they hear about probate houses and their contents together. Live sale 5 Nov.",
+   "la": 51.72037,
+   "lo": -1.93551
+  },
+  {
+   "n": "Shipton Mill",
+   "t": "tetbury",
+   "c": 5,
+   "k": "Heritage flour mill",
+   "a": "Long Newnton, GL8 8RP",
+   "w": "https://www.shipton-mill.com/",
+   "y": "Companies House: Shipton Mill Ltd, incorporated 1979. The sole active director was born in January 1954 and appointed in 1979. Call before visiting.",
+   "la": 51.61829,
+   "lo": -2.12732,
+   "r": 1
+  },
+  {
+   "n": "Petworth Antiques Market",
+   "t": "petworth",
+   "c": 0,
+   "k": "Antiques centre (35+ dealers)",
+   "a": "East St, GU28 0AB",
+   "w": "https://www.petworthantiquesmarket.com/",
+   "y": "35+ dealers, open 7 days, part of Petworth Places. The quickest way to meet the town's trade.",
+   "la": 50.98688,
+   "lo": -0.6088,
+   "p": "01798 342073"
+  },
+  {
+   "n": "Chequers Antiques & Chequers Jewels",
+   "t": "petworth",
+   "c": 2,
+   "k": "Antiques, jewellery & watches",
+   "a": "The Playhouse Gallery, Lombard St, GU28 0AG",
+   "w": "https://www.chequersjewels.co.uk/",
+   "y": "Sells antique and pre-owned jewellery and watches, the items that come out of estates first.",
+   "la": 50.98689,
+   "lo": -0.60969,
+   "p": "01798 343813"
+  },
+  {
+   "n": "Vagabond Antiques",
+   "t": "petworth",
+   "c": 0,
+   "k": "Antiques dealer",
+   "a": "Market Square, GU28 0AH",
+   "w": "https://find-and-update.company-information.service.gov.uk/company/11836380",
+   "y": "An owner-run Market Square shop (company active since 2019). Younger owner, good for a long-term ally.",
+   "la": 50.98652,
+   "lo": -0.61017
+  },
+  {
+   "n": "PAADA (dealers' association)",
+   "t": "petworth",
+   "c": 7,
+   "k": "Trade association",
+   "a": "Petworth town centre",
+   "w": "https://discoverpetworth.uk/petworth-antiques/",
+   "y": "Members include John Bird, John Giles, Phoenix and Chequers. One introduction opens the whole town.",
+   "la": 50.98657,
+   "lo": -0.61042,
+   "x": 1
+  },
+  {
+   "n": "Glanvilles Solicitors",
+   "t": "petworth",
+   "c": 6,
+   "k": "Solicitors (wills, trusts, estates)",
+   "a": "Wisteria House, Market Square, GU28 0AJ",
+   "w": "https://www.glanvilles.co.uk/site/contact/solicitors-petworth/",
+   "y": "A private-client office in the square, close to estate executors.",
+   "la": 50.98638,
+   "lo": -0.60969
+  },
+  {
+   "n": "Toovey's",
+   "t": "petworth",
+   "c": 1,
+   "k": "Auction house (20 min away)",
+   "a": "Spring Gardens, Washington RH20 3BS",
+   "w": "https://www.tooveys.com/",
+   "y": "A family-run regional auctioneer that values estates for probate. Rupert Toovey's family runs it.",
+   "la": 50.92019,
+   "lo": -0.4037,
+   "p": "01903 891955"
+  },
+  {
+   "n": "Gorringe's",
+   "t": "lewes",
+   "c": 1,
+   "k": "Auction house (weekly sales)",
+   "a": "15 North St, BN7 2PE",
+   "w": "https://www.gorringes.co.uk/",
+   "y": "Sells 600–800 lots every Monday. Executors, house clearers and dealers all pass through.",
+   "la": 50.87852,
+   "lo": 0.01012,
+   "p": "01273 472503"
+  },
+  {
+   "n": "W.F. Bruce Antique Clocks",
+   "t": "lewes",
+   "c": 2,
+   "k": "Antique clocks & watches",
+   "a": "5 North St, BN7 2PA",
+   "w": "https://www.wfbruce.co.uk/",
+   "y": "Companies House: W F Bruce Antiques Ltd, incorporated 2003. Both active directors were born in 1955 and 1960, and no younger director is listed. Trading for 30+ years.",
+   "la": 50.87451,
+   "lo": 0.01133,
+   "p": "01273 473123",
+   "r": 1
+  },
+  {
+   "n": "Cliffe Antiques Centre",
+   "t": "lewes",
+   "c": 0,
+   "k": "Antiques centre",
+   "a": "47 Cliffe High St, BN7 2AN",
+   "w": "https://www.cliffeantiquescentre.co.uk/",
+   "y": "Over 20 years old and recently under new ownership. Silver, jewellery and art, with a watch dealer inside.",
+   "la": 50.87445,
+   "lo": 0.01798,
+   "p": "01273 473266"
+  },
+  {
+   "n": "Lewes Antiques Centre",
+   "t": "lewes",
+   "c": 0,
+   "k": "Antiques centre (dozens of traders)",
+   "a": "20 Cliffe High St, BN7 2AH",
+   "w": "https://www.visitlewes.co.uk/things-to-do/shopping?p=2",
+   "y": "Lots of traders under one roof, so plenty of people to meet each visit.",
+   "la": 50.87468,
+   "lo": 0.01752,
+   "p": "01273 476148"
+  },
+  {
+   "n": "Belle & Co",
+   "t": "lewes",
+   "c": 0,
+   "k": "Antiques & interiors",
+   "a": "50a Cliffe High St, BN7 2AN",
+   "w": "https://www.belleandcompany.co.uk/",
+   "y": "Owner-run (company since 2020). Friendly first stop on Cliffe High Street.",
+   "la": 50.87385,
+   "lo": 0.01798,
+   "p": "01273 476629"
+  },
+  {
+   "n": "Harvey's Brewery Shop",
+   "t": "lewes",
+   "c": 5,
+   "k": "Family brewery (est. 1790)",
+   "a": "6 Cliffe High St, BN7 2AH",
+   "w": "https://www.harveys.org.uk/",
+   "y": "Companies House: Harvey & Son (Lewes) Ltd, incorporated 1928. Active directors were born in 1952, 1957, 1959 and 1970. Knows every old family in town.",
+   "la": 50.87408,
+   "lo": 0.01752
+  },
+  {
+   "n": "Mayo Wynne Baxter",
+   "t": "lewes",
+   "c": 6,
+   "k": "Solicitors (probate)",
+   "a": "3 Bell Lane, BN7 1JU",
+   "w": "https://www.mayowynnebaxter.co.uk/our-offices/lewes-solicitors/",
+   "y": "A large Sussex probate practice. Ask their private-client team who they use for valuations. Book ahead.",
+   "la": 50.86924,
+   "lo": -0.00004,
+   "p": "01273 477071"
+  },
+  {
+   "n": "The Pedestal",
+   "t": "henley",
+   "c": 1,
+   "k": "Auction house & valuers",
+   "a": "Unit 1, Empstead Works, Greys Rd, RG9 1UF",
+   "w": "https://www.thepedestal.com/",
+   "y": "Henley's own auctioneer, covering jewellery and watches. Probate valuations bring it estates first.",
+   "la": 51.53639,
+   "lo": -0.907
+  },
+  {
+   "n": "Jonkers Rare Books",
+   "t": "henley",
+   "c": 3,
+   "k": "Rare books & first editions",
+   "a": "27 Hart St, RG9 2AR",
+   "w": "https://www.jonkers.co.uk/",
+   "y": "Buys libraries from estates, and collectors of rare books often collect cars and art too.",
+   "la": 51.53784,
+   "lo": -0.90309
+  },
+  {
+   "n": "Way's Bookshop",
+   "t": "henley",
+   "c": 3,
+   "k": "Antiquarian bookseller (40+ years)",
+   "a": "54 Friday St, RG9 1AH",
+   "w": "https://www.waysbookshop.co.uk/",
+   "y": "40+ years buying from local houses. A classic probate-grapevine shop.",
+   "la": 51.53632,
+   "lo": -0.90241
+  },
+  {
+   "n": "Anthony Paul Jewellery",
+   "t": "henley",
+   "c": 2,
+   "k": "Family jeweller (since 1982)",
+   "a": "8a Bell St, RG9 2BG",
+   "w": "https://anthonypauljewellery.co.uk/",
+   "y": "Antique jewellery specialists. Estate jewellery comes through their door, so ask about valuations and buying.",
+   "la": 51.53855,
+   "lo": -0.90453
+  },
+  {
+   "n": "Hobbs of Henley",
+   "t": "henley",
+   "c": 5,
+   "k": "Boatyard & river hire (family since 1870)",
+   "a": "The Boathouse, Station Rd, RG9 1AZ",
+   "w": "https://www.hobbsofhenley.com/",
+   "y": "Companies House: active directors were born in 1948 and 1971. A 150-year family firm that knows all of Henley.",
+   "la": 51.53541,
+   "lo": -0.90038
+  },
+  {
+   "n": "Blandy & Blandy",
+   "t": "henley",
+   "c": 6,
+   "k": "Solicitors (wills & probate)",
+   "a": "24 Thameside, RG9 2LJ",
+   "w": "https://www.blandy.co.uk/contact/solicitors-henley-on-thames",
+   "y": "Long-established private-client firm. Probate referrals start here.",
+   "la": 51.53855,
+   "lo": -0.90118,
+   "p": "01491 572323"
+  },
+  {
+   "n": "Broad Arrow Group UK",
+   "t": "bicester",
+   "c": 4,
+   "k": "Collector-car auctions",
+   "a": "Building 131, Bicester Heritage",
+   "w": "https://www.broadarrowauctions.com/",
+   "y": "Ferrari-heavy auctions (Zürich sale 7 Nov). They handle estate and collection sales.",
+   "la": 51.91533,
+   "lo": -1.14037,
+   "x": 1
+  },
+  {
+   "n": "Hagerty",
+   "t": "bicester",
+   "c": 4,
+   "k": "Classic-car insurance & valuations",
+   "a": "141b The Command Works, OX27 8FZ",
+   "w": "https://www.hagerty.co.uk/",
+   "y": "Values collections for insurance and probate, so they know where the cars are.",
+   "la": 51.91419,
+   "lo": -1.14244
+  },
+  {
+   "n": "Curated by Pendine",
+   "t": "bicester",
+   "c": 4,
+   "k": "Car-collection management & sales",
+   "a": "Building 93, The Blast House",
+   "w": "https://pendine.com",
+   "y": "Manages whole collections for owners, including when a family needs to sell after a death.",
+   "la": 51.91503,
+   "lo": -1.13989,
+   "x": 1
+  },
+  {
+   "n": "Hangar 136",
+   "t": "bicester",
+   "c": 4,
+   "k": "Classic & supercar sales",
+   "a": "Building 136, Bicester Heritage, OX27 8FY",
+   "w": "https://www.hangar136.com/",
+   "y": "A buy-and-sell showroom that could take buyers from your supercar leads.",
+   "la": 51.91411,
+   "lo": -1.14131
+  },
+  {
+   "n": "Kingsbury Racing Shop",
+   "t": "bicester",
+   "c": 4,
+   "k": "Vintage Bentley specialist",
+   "a": "Building 99, Engine Fitting Shop",
+   "w": "https://bicestermotion.com/directory",
+   "y": "Looks after pre-war Bentleys, which often sit in long-held family collections.",
+   "la": 51.91473,
+   "lo": -1.14037,
+   "x": 1
+  },
+  {
+   "n": "Bicester Motion (estate office)",
+   "t": "bicester",
+   "c": 7,
+   "k": "Site owner & Scramble host",
+   "a": "Building 123, Buckingham Rd, OX27",
+   "w": "https://bicestermotion.com/scramble",
+   "y": "Runs the Scramble days. Ask for introductions to tenants and collectors.",
+   "la": 51.91503,
+   "lo": -1.14085,
+   "x": 1
+  },
+  {
+   "n": "Historics Auctioneers",
+   "t": "cobham",
+   "c": 4,
+   "k": "Classic-car auctions",
+   "a": "Mercedes-Benz World, Brooklands Dr, KT13 0SL (sale venue)",
+   "w": "https://www.historics.co.uk/upcoming-auctions/",
+   "y": "Brooklands Velocity sale on 28 Nov. Consignors include estates and collectors downsizing.",
+   "la": 51.35341,
+   "lo": -0.47068,
+   "p": "01344 952211"
+  },
+  {
+   "n": "Brooklands Museum",
+   "t": "cobham",
+   "c": 4,
+   "k": "Motoring museum & club hub",
+   "a": "Brooklands Dr, Weybridge KT13 0SL",
+   "w": "https://www.brooklandsmuseum.com/",
+   "y": "Members and volunteers are Surrey's classic-car owners. Join and go to events.",
+   "la": 51.35281,
+   "lo": -0.47068
+  },
+  {
+   "n": "Harper Ltd",
+   "t": "cobham",
+   "c": 2,
+   "k": "Family jeweller",
+   "a": "14 High St, Cobham KT11 3DY",
+   "w": "https://www.harperltd.co.uk/",
+   "y": "Companies House: incorporated 1979. Founders born in 1951 and 1953 sit alongside the next generation (born 1986 and 1989). They value jewellery, a probate entry point. Closed Wednesdays.",
+   "la": 51.32859,
+   "lo": -0.41106,
+   "p": "01932 865575"
+  },
+  {
+   "n": "Baker Brothers",
+   "t": "cobham",
+   "c": 4,
+   "k": "Prestige used cars",
+   "a": "Redhill Rd, Cobham KT11 1EF",
+   "w": "https://www.bakerbrothers.co.uk/",
+   "y": "Independent prestige dealer, by appointment only. Ring ahead.",
+   "la": 51.3351,
+   "lo": -0.4523
+  },
+  {
+   "n": "Ewbank's",
+   "t": "cobham",
+   "c": 1,
+   "k": "Auction house (15 min away)",
+   "a": "Burnt Common Auction Rooms, London Rd, Send GU23 7LN",
+   "w": "https://www.ewbankauctions.co.uk/",
+   "y": "A busy Surrey general and specialist saleroom that handles house contents and estates.",
+   "la": 51.27932,
+   "lo": -0.51663,
+   "p": "01483 223101"
+  },
+  {
+   "n": "Scuderia Prestige",
+   "t": "cobham",
+   "c": 4,
+   "k": "Supercar dealer (your partner)",
+   "a": "507 London Rd, Camberley GU15 3JE",
+   "w": "https://www.scuderiaprestige.com/",
+   "y": "Already matched to your leads board. Visit in person to firm up the relationship and swap introductions.",
+   "la": 51.33348,
+   "lo": -0.76891,
+   "p": "01276 786888"
+  }
+ ],
+ "atowns": [
+  {
+   "id": "hungerford",
+   "name": "Hungerford",
+   "la": 51.4155,
+   "lo": -1.515,
+   "day": "Wednesday market, or the antiques fair on the 2nd Sunday (8 Nov, 13 Dec)",
+   "go": "Paddington, about 1h05"
+  },
+  {
+   "id": "tetbury",
+   "name": "Tetbury",
+   "la": 51.6375,
+   "lo": -2.1605,
+   "day": "Wednesday, market day",
+   "go": "Paddington to Kemble, about 1h15, then a taxi"
+  },
+  {
+   "id": "petworth",
+   "name": "Petworth",
+   "la": 50.9866,
+   "lo": -0.6097,
+   "day": "Tuesday to Saturday, when most dealers are in",
+   "go": "Victoria to Pulborough, about 1h15, then a taxi"
+  },
+  {
+   "id": "lewes",
+   "name": "Lewes",
+   "la": 50.8745,
+   "lo": 0.0125,
+   "day": "Monday, Gorringe's weekly sale",
+   "go": "Direct from Victoria, about 1h05"
+  },
+  {
+   "id": "henley",
+   "name": "Henley-on-Thames",
+   "la": 51.5372,
+   "lo": -0.903,
+   "day": "Thursday, charter market",
+   "go": "Paddington via Twyford, about 1h"
+  },
+  {
+   "id": "bicester",
+   "name": "Bicester Heritage",
+   "la": 51.9145,
+   "lo": -1.141,
+   "day": "Scramble Sunday, 10 Jan 2027",
+   "go": "Marylebone, about 50 min, then a taxi"
+  },
+  {
+   "id": "cobham",
+   "name": "Cobham & Weybridge",
+   "la": 51.34,
+   "lo": -0.44,
+   "day": "Sat 28 Nov, Historics at Brooklands",
+   "go": "Waterloo, about 30 to 35 min"
+  }
+ ],
+ "nbiz": [
+  {
+   "town": "hungerford",
+   "name": "Hungerford Arcade",
+   "type": "Antiques centre (100+ dealers)",
+   "addr": "26–27 High St, RG17 0NF",
+   "web": "https://www.hungerfordarcade.com/",
+   "phone": "01488 683701",
+   "theme": "Retiring founder",
+   "why": "Companies House: Hungerford Arcade Ltd, incorporated 2002. Both active directors were born in 1957 and 1960, and no younger director is listed. Its 100+ dealers also make it a probate grapevine."
+  },
+  {
+   "town": "hungerford",
+   "name": "Below Stairs of Hungerford",
+   "type": "Antiques dealer, 5 showrooms",
+   "addr": "103 High St, RG17 0NB",
+   "web": "https://www.belowstairs.co.uk",
+   "phone": "01488 682317",
+   "theme": "Probate network",
+   "why": "Buys good English 19th and early 20th century pieces, so it sees house clearances first."
+  },
+  {
+   "town": "hungerford",
+   "name": "Roger King Antiques",
+   "type": "Georgian & Victorian furniture",
+   "addr": "111 High St, RG17 0NB",
+   "web": "https://www.kingantiques.co.uk/",
+   "phone": "01488 682256",
+   "theme": "Probate network",
+   "why": "Over 25 years in this shop. The LLP members were born in 1974 and 1977, so the family has already handed over. Ask how they managed it."
+  },
+  {
+   "town": "hungerford",
+   "name": "Great Grooms Antiques Centre",
+   "type": "Antiques centre",
+   "addr": "1 Charnham St, RG17 0EP",
+   "web": "https://www.greatgrooms.co.uk/",
+   "phone": "01488 682314",
+   "theme": "Probate network",
+   "why": "A multi-dealer centre: one hello reaches many dealers who buy from estates."
+  },
+  {
+   "town": "hungerford",
+   "name": "Youll's Antiques",
+   "type": "French & English furniture",
+   "addr": "28 Charnham St, RG17 0EJ",
+   "web": "https://www.youllsantiques.co.uk",
+   "phone": "01488 682046",
+   "theme": "Probate network",
+   "why": "Decorative trade with country-house buyers. Good for 'who's clearing a big house' talk."
+  },
+  {
+   "town": "hungerford",
+   "name": "Dickins Hopgood Chidley",
+   "type": "Solicitors (wills & probate)",
+   "addr": "The Old School House, 42 High St, RG17 0NF",
+   "web": "https://www.dhc-solicitors.co.uk/contact/",
+   "phone": "01488 683555",
+   "theme": "Connector",
+   "why": "The local probate desk. Executors ask them who to call for valuations and clearances."
+  },
+  {
+   "town": "hungerford",
+   "name": "Dreweatts",
+   "type": "Auction house (15 min away)",
+   "addr": "Donnington Priory, Oxford Rd, Newbury RG14 2JE",
+   "web": "https://www.dreweatts.com/",
+   "phone": "01635 553553",
+   "theme": "Probate network",
+   "why": "Handles single-owner estate collections. Jewellery sale 18 Nov, watches 19 Nov. Meet the specialists at viewing."
+  },
+  {
+   "town": "tetbury",
+   "name": "Lorfords Antiques",
+   "type": "Decorative antiques (shop + Babdown hangars)",
+   "addr": "30 Long St, GL8 8AQ",
+   "web": "https://www.lorfords.com/",
+   "phone": "01666 505111",
+   "theme": "Probate network",
+   "why": "One of the biggest decorative-antiques businesses in the UK, buying country-house contents."
+  },
+  {
+   "town": "tetbury",
+   "name": "Brownrigg",
+   "type": "Decorative antiques & interiors",
+   "addr": "Stamford House, 14 Long St, GL8 8AQ",
+   "web": "https://www.brownrigg-interiors.co.uk",
+   "phone": "01666 500887",
+   "theme": "Probate network",
+   "why": "A CADA/LAPADA member with a warehouse nearby. Buys whole collections."
+  },
+  {
+   "town": "tetbury",
+   "name": "Amy Perry Antiques",
+   "type": "Decorative antiques",
+   "addr": "21 Long St, GL8 8AA",
+   "web": "https://www.amyperryantiques.co.uk",
+   "phone": "01666 500354",
+   "theme": "Probate network",
+   "why": "Recently moved to a new shop, and new shops are usually keen to meet people."
+  },
+  {
+   "town": "tetbury",
+   "name": "Bonhams (Tetbury office)",
+   "type": "Auction house regional office",
+   "addr": "Eight Bells House, 14 Church St, GL8 8JG",
+   "web": "https://www.bonhams.com/",
+   "phone": "01666 502200",
+   "theme": "Probate network",
+   "why": "Regional offices do probate valuations and win estates for London sales. The key probate connector here."
+  },
+  {
+   "town": "tetbury",
+   "name": "Foxfield Solicitors",
+   "type": "Solicitors (wills, probate, tax)",
+   "addr": "5 Long St, GL8 8AA",
+   "web": "https://find-and-update.company-information.service.gov.uk/company/10478015",
+   "theme": "Connector",
+   "why": "A private-client firm on the main street, close to estate executors. Listed as active on Companies House."
+  },
+  {
+   "town": "tetbury",
+   "name": "Moore Allen & Innocent",
+   "type": "Auctioneers & estate agents",
+   "addr": "Cirencester Salerooms, Burford Rd, GL7 5RH",
+   "web": "https://auctions.mooreallen.co.uk/auctions",
+   "theme": "Connector",
+   "why": "A combined saleroom and estate agency: they hear about probate houses and their contents together. Live sale 5 Nov."
+  },
+  {
+   "town": "tetbury",
+   "name": "Shipton Mill",
+   "type": "Heritage flour mill",
+   "addr": "Long Newnton, GL8 8RP",
+   "web": "https://www.shipton-mill.com/",
+   "theme": "Retiring founder",
+   "why": "Companies House: Shipton Mill Ltd, incorporated 1979. The sole active director was born in January 1954 and appointed in 1979. Call before visiting."
+  },
+  {
+   "town": "petworth",
+   "name": "Petworth Antiques Market",
+   "type": "Antiques centre (35+ dealers)",
+   "addr": "East St, GU28 0AB",
+   "web": "https://www.petworthantiquesmarket.com/",
+   "phone": "01798 342073",
+   "theme": "Probate network",
+   "why": "35+ dealers, open 7 days, part of Petworth Places. The quickest way to meet the town's trade."
+  },
+  {
+   "town": "petworth",
+   "name": "Chequers Antiques & Chequers Jewels",
+   "type": "Antiques, jewellery & watches",
+   "addr": "The Playhouse Gallery, Lombard St, GU28 0AG",
+   "web": "https://www.chequersjewels.co.uk/",
+   "phone": "01798 343813",
+   "theme": "Probate network",
+   "why": "Sells antique and pre-owned jewellery and watches, the items that come out of estates first."
+  },
+  {
+   "town": "petworth",
+   "name": "Vagabond Antiques",
+   "type": "Antiques dealer",
+   "addr": "Market Square, GU28 0AH",
+   "web": "https://find-and-update.company-information.service.gov.uk/company/11836380",
+   "theme": "Probate network",
+   "why": "An owner-run Market Square shop (company active since 2019). Younger owner, good for a long-term ally."
+  },
+  {
+   "town": "petworth",
+   "name": "PAADA (dealers' association)",
+   "type": "Trade association",
+   "addr": "Petworth town centre",
+   "web": "https://discoverpetworth.uk/petworth-antiques/",
+   "theme": "Connector",
+   "why": "Members include John Bird, John Giles, Phoenix and Chequers. One introduction opens the whole town."
+  },
+  {
+   "town": "petworth",
+   "name": "Glanvilles Solicitors",
+   "type": "Solicitors (wills, trusts, estates)",
+   "addr": "Wisteria House, Market Square, GU28 0AJ",
+   "web": "https://www.glanvilles.co.uk/site/contact/solicitors-petworth/",
+   "theme": "Connector",
+   "why": "A private-client office in the square, close to estate executors."
+  },
+  {
+   "town": "petworth",
+   "name": "Toovey's",
+   "type": "Auction house (20 min away)",
+   "addr": "Spring Gardens, Washington RH20 3BS",
+   "web": "https://www.tooveys.com/",
+   "phone": "01903 891955",
+   "theme": "Probate network",
+   "why": "A family-run regional auctioneer that values estates for probate. Rupert Toovey's family runs it."
+  },
+  {
+   "town": "lewes",
+   "name": "Gorringe's",
+   "type": "Auction house (weekly sales)",
+   "addr": "15 North St, BN7 2PE",
+   "web": "https://www.gorringes.co.uk/",
+   "phone": "01273 472503",
+   "theme": "Probate network",
+   "why": "Sells 600–800 lots every Monday. Executors, house clearers and dealers all pass through."
+  },
+  {
+   "town": "lewes",
+   "name": "W.F. Bruce Antique Clocks",
+   "type": "Antique clocks & watches",
+   "addr": "5 North St, BN7 2PA",
+   "web": "https://www.wfbruce.co.uk/",
+   "phone": "01273 473123",
+   "theme": "Retiring founder",
+   "why": "Companies House: W F Bruce Antiques Ltd, incorporated 2003. Both active directors were born in 1955 and 1960, and no younger director is listed. Trading for 30+ years."
+  },
+  {
+   "town": "lewes",
+   "name": "Cliffe Antiques Centre",
+   "type": "Antiques centre",
+   "addr": "47 Cliffe High St, BN7 2AN",
+   "web": "https://www.cliffeantiquescentre.co.uk/",
+   "phone": "01273 473266",
+   "theme": "Probate network",
+   "why": "Over 20 years old and recently under new ownership. Silver, jewellery and art, with a watch dealer inside."
+  },
+  {
+   "town": "lewes",
+   "name": "Lewes Antiques Centre",
+   "type": "Antiques centre (dozens of traders)",
+   "addr": "20 Cliffe High St, BN7 2AH",
+   "web": "https://www.visitlewes.co.uk/things-to-do/shopping?p=2",
+   "phone": "01273 476148",
+   "theme": "Probate network",
+   "why": "Lots of traders under one roof, so plenty of people to meet each visit."
+  },
+  {
+   "town": "lewes",
+   "name": "Belle & Co",
+   "type": "Antiques & interiors",
+   "addr": "50a Cliffe High St, BN7 2AN",
+   "web": "https://www.belleandcompany.co.uk/",
+   "phone": "01273 476629",
+   "theme": "Probate network",
+   "why": "Owner-run (company since 2020). Friendly first stop on Cliffe High Street."
+  },
+  {
+   "town": "lewes",
+   "name": "Harvey's Brewery Shop",
+   "type": "Family brewery (est. 1790)",
+   "addr": "6 Cliffe High St, BN7 2AH",
+   "web": "https://www.harveys.org.uk/",
+   "theme": "Connector",
+   "why": "Companies House: Harvey & Son (Lewes) Ltd, incorporated 1928. Active directors were born in 1952, 1957, 1959 and 1970. Knows every old family in town."
+  },
+  {
+   "town": "lewes",
+   "name": "Mayo Wynne Baxter",
+   "type": "Solicitors (probate)",
+   "addr": "3 Bell Lane, BN7 1JU",
+   "web": "https://www.mayowynnebaxter.co.uk/our-offices/lewes-solicitors/",
+   "phone": "01273 477071",
+   "theme": "Connector",
+   "why": "A large Sussex probate practice. Ask their private-client team who they use for valuations. Book ahead."
+  },
+  {
+   "town": "henley",
+   "name": "The Pedestal",
+   "type": "Auction house & valuers",
+   "addr": "Unit 1, Empstead Works, Greys Rd, RG9 1UF",
+   "web": "https://www.thepedestal.com/",
+   "theme": "Probate network",
+   "why": "Henley's own auctioneer, covering jewellery and watches. Probate valuations bring it estates first."
+  },
+  {
+   "town": "henley",
+   "name": "Jonkers Rare Books",
+   "type": "Rare books & first editions",
+   "addr": "27 Hart St, RG9 2AR",
+   "web": "https://www.jonkers.co.uk/",
+   "theme": "Probate network",
+   "why": "Buys libraries from estates, and collectors of rare books often collect cars and art too."
+  },
+  {
+   "town": "henley",
+   "name": "Way's Bookshop",
+   "type": "Antiquarian bookseller (40+ years)",
+   "addr": "54 Friday St, RG9 1AH",
+   "web": "https://www.waysbookshop.co.uk/",
+   "theme": "Probate network",
+   "why": "40+ years buying from local houses. A classic probate-grapevine shop."
+  },
+  {
+   "town": "henley",
+   "name": "Anthony Paul Jewellery",
+   "type": "Family jeweller (since 1982)",
+   "addr": "8a Bell St, RG9 2BG",
+   "web": "https://anthonypauljewellery.co.uk/",
+   "theme": "Probate network",
+   "why": "Antique jewellery specialists. Estate jewellery comes through their door, so ask about valuations and buying."
+  },
+  {
+   "town": "henley",
+   "name": "Hobbs of Henley",
+   "type": "Boatyard & river hire (family since 1870)",
+   "addr": "The Boathouse, Station Rd, RG9 1AZ",
+   "web": "https://www.hobbsofhenley.com/",
+   "theme": "Connector",
+   "why": "Companies House: active directors were born in 1948 and 1971. A 150-year family firm that knows all of Henley."
+  },
+  {
+   "town": "henley",
+   "name": "Blandy & Blandy",
+   "type": "Solicitors (wills & probate)",
+   "addr": "24 Thameside, RG9 2LJ",
+   "web": "https://www.blandy.co.uk/contact/solicitors-henley-on-thames",
+   "phone": "01491 572323",
+   "theme": "Connector",
+   "why": "Long-established private-client firm. Probate referrals start here."
+  },
+  {
+   "town": "bicester",
+   "name": "Broad Arrow Group UK",
+   "type": "Collector-car auctions",
+   "addr": "Building 131, Bicester Heritage",
+   "web": "https://www.broadarrowauctions.com/",
+   "theme": "Supercar & classic",
+   "why": "Ferrari-heavy auctions (Zürich sale 7 Nov). They handle estate and collection sales."
+  },
+  {
+   "town": "bicester",
+   "name": "Hagerty",
+   "type": "Classic-car insurance & valuations",
+   "addr": "141b The Command Works, OX27 8FZ",
+   "web": "https://www.hagerty.co.uk/",
+   "theme": "Connector",
+   "why": "Values collections for insurance and probate, so they know where the cars are."
+  },
+  {
+   "town": "bicester",
+   "name": "Curated by Pendine",
+   "type": "Car-collection management & sales",
+   "addr": "Building 93, The Blast House",
+   "web": "https://pendine.com",
+   "theme": "Supercar & classic",
+   "why": "Manages whole collections for owners, including when a family needs to sell after a death."
+  },
+  {
+   "town": "bicester",
+   "name": "Hangar 136",
+   "type": "Classic & supercar sales",
+   "addr": "Building 136, Bicester Heritage, OX27 8FY",
+   "web": "https://www.hangar136.com/",
+   "theme": "Supercar & classic",
+   "why": "A buy-and-sell showroom that could take buyers from your supercar leads."
+  },
+  {
+   "town": "bicester",
+   "name": "Kingsbury Racing Shop",
+   "type": "Vintage Bentley specialist",
+   "addr": "Building 99, Engine Fitting Shop",
+   "web": "https://bicestermotion.com/directory",
+   "theme": "Supercar & classic",
+   "why": "Looks after pre-war Bentleys, which often sit in long-held family collections."
+  },
+  {
+   "town": "bicester",
+   "name": "Bicester Motion (estate office)",
+   "type": "Site owner & Scramble host",
+   "addr": "Building 123, Buckingham Rd, OX27",
+   "web": "https://bicestermotion.com/scramble",
+   "theme": "Connector",
+   "why": "Runs the Scramble days. Ask for introductions to tenants and collectors."
+  },
+  {
+   "town": "cobham",
+   "name": "Historics Auctioneers",
+   "type": "Classic-car auctions",
+   "addr": "Mercedes-Benz World, Brooklands Dr, KT13 0SL (sale venue)",
+   "web": "https://www.historics.co.uk/upcoming-auctions/",
+   "phone": "01344 952211",
+   "theme": "Supercar & classic",
+   "why": "Brooklands Velocity sale on 28 Nov. Consignors include estates and collectors downsizing."
+  },
+  {
+   "town": "cobham",
+   "name": "Brooklands Museum",
+   "type": "Motoring museum & club hub",
+   "addr": "Brooklands Dr, Weybridge KT13 0SL",
+   "web": "https://www.brooklandsmuseum.com/",
+   "theme": "Connector",
+   "why": "Members and volunteers are Surrey's classic-car owners. Join and go to events."
+  },
+  {
+   "town": "cobham",
+   "name": "Harper Ltd",
+   "type": "Family jeweller",
+   "addr": "14 High St, Cobham KT11 3DY",
+   "web": "https://www.harperltd.co.uk/",
+   "phone": "01932 865575",
+   "theme": "Probate network",
+   "why": "Companies House: incorporated 1979. Founders born in 1951 and 1953 sit alongside the next generation (born 1986 and 1989). They value jewellery, a probate entry point. Closed Wednesdays."
+  },
+  {
+   "town": "cobham",
+   "name": "Baker Brothers",
+   "type": "Prestige used cars",
+   "addr": "Redhill Rd, Cobham KT11 1EF",
+   "web": "https://www.bakerbrothers.co.uk/",
+   "theme": "Supercar & classic",
+   "why": "Independent prestige dealer, by appointment only. Ring ahead."
+  },
+  {
+   "town": "cobham",
+   "name": "Ewbank's",
+   "type": "Auction house (15 min away)",
+   "addr": "Burnt Common Auction Rooms, London Rd, Send GU23 7LN",
+   "web": "https://www.ewbankauctions.co.uk/",
+   "phone": "01483 223101",
+   "theme": "Probate network",
+   "why": "A busy Surrey general and specialist saleroom that handles house contents and estates."
+  },
+  {
+   "town": "cobham",
+   "name": "Scuderia Prestige",
+   "type": "Supercar dealer (your partner)",
+   "addr": "507 London Rd, Camberley GU15 3JE",
+   "web": "https://www.scuderiaprestige.com/",
+   "phone": "01276 786888",
+   "theme": "Supercar & classic",
+   "why": "Already matched to your leads board. Visit in person to firm up the relationship and swap introductions."
+  }
+ ],
+ "ntowns": [
+  {
+   "id": "hungerford",
+   "name": "Hungerford",
+   "why": "Antiques town with 100+ dealers on one High Street. Dreweatts, a major auction house, is 15 minutes away.",
+   "travel": "Train from Paddington, about 1h05 (some trains change at Reading). Car: M4 J14, about 1h30.",
+   "bestDay": "Wednesday (charter and indoor market) or the antiques fair on the 2nd Sunday of each month in the Town Hall.",
+   "dates": "Antiques fair Sun 8 Nov and Sun 13 Dec. Dreweatts Fine Jewellery 18 Nov, Fine Watches 19 Nov."
+  },
+  {
+   "id": "tetbury",
+   "name": "Tetbury",
+   "why": "The Cotswolds' antiques capital, with top dealers along Long Street, a Bonhams office in town and estate money all around.",
+   "travel": "Train from Paddington to Kemble, about 1h15, then a 15-minute taxi. Car: M4 J17, about 2h.",
+   "bestDay": "Wednesday (market day). Pair it with a Moore Allen & Innocent sale day in Cirencester.",
+   "dates": "Moore Allen & Innocent live sale Thu 5 Nov."
+  },
+  {
+   "id": "petworth",
+   "name": "Petworth",
+   "why": "A small Sussex town packed with fine-antiques dealers, many in the local dealers' association (PAADA), next to the Petworth estate.",
+   "travel": "Train from Victoria to Pulborough, about 1h15, then a 15-minute taxi. Car: A3 then A283, about 1h45.",
+   "bestDay": "Tuesday to Saturday, when most dealers are in. The Antiques Market is open 7 days.",
+   "dates": "Toovey's (20 minutes away) holds regular specialist sales. Check tooveys.com before you go."
+  },
+  {
+   "id": "lewes",
+   "name": "Lewes",
+   "why": "A long-running weekly auction (Gorringe's), Cliffe High Street's antiques centres, and 230-year-old Harvey's Brewery.",
+   "travel": "Direct train from Victoria, about 1h05. Everything is walkable from the station.",
+   "bestDay": "Monday: Gorringe's weekly sale, with the room full of dealers and executors. Farmers' market 1st and 3rd Saturdays.",
+   "dates": "Gorringe's Fine Art & Interiors Tue 3 Nov. House & Garden sale Mon 9 Nov."
+  },
+  {
+   "id": "henley",
+   "name": "Henley-on-Thames",
+   "why": "A wealthy riverside town with an auction house, two rare-book dealers, a family jeweller and a boatyard family firm dating from 1870.",
+   "travel": "Train from Paddington, changing at Twyford, about 1h. Car: M4 J8/9, about 1h15.",
+   "bestDay": "Thursday (charter market). Farmers' market 2nd Saturday.",
+   "dates": "Check The Pedestal's sale calendar. Viewing days are the easiest time to chat."
+  },
+  {
+   "id": "bicester",
+   "name": "Bicester Heritage",
+   "why": "A former RAF base with 50+ classic and supercar specialists, including Broad Arrow (auctions), Hagerty (valuations and insurance) and car-collection managers.",
+   "travel": "Train from Marylebone to Bicester, about 50 min, then a 5-minute taxi. Car: M40 J9, about 1h15.",
+   "bestDay": "A Scramble Sunday, when every workshop opens to the public. On other days, book visits ahead.",
+   "dates": "Scramble Sun 10 Jan 2027, Super Scramble 24–25 Apr 2027, Scramble Sun 3 Oct 2027."
+  },
+  {
+   "id": "cobham",
+   "name": "Cobham & Weybridge",
+   "why": "Surrey's supercar belt: Brooklands, a classic-car auction at Mercedes-Benz World, a 1979 family jeweller, and your dealer partner Scuderia Prestige nearby.",
+   "travel": "Train from Waterloo to Weybridge, about 30 min, or to Cobham & Stoke d'Abernon, about 35 min. Car: A3/M25 J10, about 45 min.",
+   "bestDay": "Saturday 28 Nov: Historics' Brooklands Velocity sale (viewing 26–27 Nov).",
+   "dates": "Historics at Mercedes-Benz World Sat 28 Nov."
+  }
+ ]
+}

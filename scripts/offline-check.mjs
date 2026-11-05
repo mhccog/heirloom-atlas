@@ -1,0 +1,13 @@
+import puppeteer from 'puppeteer-core';
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox'] });
+const p = await b.newPage(); const errs = [];
+p.on('pageerror', e => errs.push(e.message));
+await p.goto('https://mhccog.github.io/heirloom-atlas/', { waitUntil: 'networkidle0' });
+await p.waitForFunction('navigator.serviceWorker.controller || window.__ready'); await new Promise(r => setTimeout(r, 3000));
+await p.reload({ waitUntil: 'networkidle0' }); await new Promise(r => setTimeout(r, 1500));
+const sw = await p.evaluate(() => !!navigator.serviceWorker.controller);
+await p.setOfflineMode(true); await p.reload({ waitUntil: 'domcontentloaded' });
+await p.waitForFunction('window.__ready', { timeout: 10000 }).catch(() => errs.push('offline not ready'));
+const n = await p.evaluate(() => document.querySelectorAll('#dash .stat').length);
+console.log(JSON.stringify({ swControlling: sw, offlineDashStats: n, errs }));
+await b.close();
